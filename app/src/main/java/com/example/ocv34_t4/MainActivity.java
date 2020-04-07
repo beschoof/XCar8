@@ -396,7 +396,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       picAnalyzeProcess.run(cameraPic);
       if (duration > 0) {
          t1 = SystemClock.uptimeMillis();
-         if (t1 - 10 > duration) {
+         if (t1 - t0 > duration) {
             tHandler.obtainMessage(1).sendToTarget();
          }
       }
