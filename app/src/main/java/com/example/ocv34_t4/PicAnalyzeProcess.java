@@ -1,4 +1,5 @@
 package com.example.ocv34_t4;
+// stnd7.4.20, laptop
 
 import android.app.Activity;
 import android.graphics.Bitmap;
