@@ -1,0 +1,2 @@
+include ':app', ':sdk', ':mqttlib'
+rootProject.name='ocv34_t4'
