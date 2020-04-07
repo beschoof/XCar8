@@ -1,4 +1,5 @@
 package com.example.ocv34_t4;
+// Stand 7.4.20, BigBlack
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
