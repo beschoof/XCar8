@@ -1,5 +1,5 @@
 /*
-   Stand 03.04.20
+   Stand 07.04.20, im Workspace
    - XCar6
    + LED-Anzeige
 
@@ -97,6 +97,7 @@ P2PMQTTpublish pub;
 
 void setup() {
   Serial.begin(9600);
+  ledInit();
   showStat(statStandby);
   Serial.println("init...");
   lenkungServo.attach(servoPin);
@@ -170,7 +171,7 @@ void loop() {
       plT = (unsigned int) payload[2];  // in sek., bei cmdInit: 101/102: Seben / Crawler
       plR = (unsigned int) payload[3];  // 0..15 , 8==geradeaus, 0: voll rechts, 15: voll links
       plV = (unsigned int) payload[4];  // -- bei carTypeSeben::  1..15 , 8==halt, 0: voll speed back, 15: voll speed vor
-      plS = (unsigned int) payload[5];  // -- bei carTypeCrawl::  Weg in Meter fÃ¼r das MOVE
+      plS = (unsigned int) payload[5];  // -- bei carTypeCrawl::  Weg in Meter fuer das MOVE
       plA = (unsigned int) payload[6];  // -- bei Gyro: Winkel in 30 Grad (12 == Ein Vollkreis)
 
       tStart = millis();
@@ -325,7 +326,7 @@ void doPublish(int rc, byte* val)  {  //  wir sind rum
       bval[i+2] = val[i];
     valStr += String(val[i]) + ", ";
     }
-    logge("VAL= " + valStr);
+    logge("doPublish: VAL= " + valStr);
     pub.payload = bval;
     pub.fixedHeader = 48;
     pub.length = 4 + 2 + sizeof(val);  // 4 + bval
@@ -333,7 +334,7 @@ void doPublish(int rc, byte* val)  {  //  wir sind rum
     pub.lengthTopicLSB = 2;  // length of  mqttTopic
     pub.topic = (byte*) mqttTopic;  // "AN" s. oben
     mqtt.publish(pub);
-    logge("published rc/id: " + String(rc) + " bei id: " + plId);
+    logge("doPublish: published rc/id: " + String(rc) + " bei id: " + plId);
     iAmActive = false;
     showStat(statStandby);
 
@@ -411,4 +412,10 @@ void showStat(int n) {
             digitalWrite(ledDrivePin + i, HIGH);
         }
     }
+}
+
+void ledInit() {
+  for (int i=0; i<8; i++) {
+    pinMode(ledDrivePin + i, OUTPUT);
+  }
 }
