@@ -416,12 +416,12 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       @Override
       public void handleMessage(Message msg) {
          byte plCmd = CMD_MOVE; // drive (ggf. auch mit v=0)
-         byte plT = 1;  // time
+         byte plT = 0;  // time
          byte plV = 3;  // geschw
-         byte plR = 8;  // radius, 8:: geradeaus
+         byte plR = 0;  // radius, 8:: geradeaus
          byte plS = 0;  // weg
          byte plA = 0;  // Winkel
-         int  newDir = 0; // left: -1, right: 1
+         int  newDir = 0; // 1..3
          switch (msg.what) {
             case ACTION_LEFT:
                plR = 10;  // radius

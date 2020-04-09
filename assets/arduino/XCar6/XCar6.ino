@@ -1,5 +1,5 @@
 /*
-   Stand 07.04.20, im Workspace
+   Stand 09.04.20, 09:42, bigblack
    - XCar6
    + LED-Anzeige
 
@@ -164,7 +164,6 @@ void loop() {
   case PUBLISH:  // das kommt vom Android
       logge (" getType: publish");
       byte* payload = mqtt.getPayload(type);
-      logge("got payload:");
       for (int k=0; k<7; k++) { Serial.print(payload[k]); Serial.print(", "); } Serial.println();
       plId  = (unsigned int) payload[0];
       plCmd = (unsigned int) payload[1];
@@ -222,7 +221,7 @@ void loop() {
             }
 
             doMove();
-            logge(" -> MOVE dur = " + String(duration) + ", cnt: " + String(rotMax) + ", dips: " + String(dipsMax));
+//            logge(" -> MOVE dur = " + String(duration) + ", cnt: " + String(rotMax) + ", dips: " + String(dipsMax));
           }
           break;
 
