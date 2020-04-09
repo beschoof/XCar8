@@ -8,7 +8,7 @@
  * 8.9.17: an die Strings ein \0
   * 10.3.2018: publish: Verlaengern des PayloadArrays
   * 20.7.19: syntax korr
-  ' 09.04.2020: Check auf overflows
+  ' 09.04.2020, 15:34: Check auf overflows
   */
 
 #include "P2PMQTT.h"
@@ -140,7 +140,6 @@ bool P2PMQTT::checkTopic(int type, char* topic) {
       break;
   }
   delete bufData;
-  delete subscribe;
   return result;
 }
 
@@ -167,7 +166,6 @@ byte* P2PMQTT::getTopic(int type) {
     default:
       break;
   }
-  delete publish;
   return bufDataOut;
 }
 
@@ -203,7 +201,6 @@ byte* P2PMQTT::getPayload(int type) {
     default:
       break;
   }
-  delete publish;
   return myPayload;
 }
 
@@ -234,7 +231,6 @@ byte* P2PMQTT::getMsgPublishField(int field) {
   publish.payload = new byte[aux];
   for(int i = 0; i < aux; i++) publish.payload[i] = buffer[index++];
   if(field == 0) for(int i = 0; i < aux; i++) bufDataOut[i] = publish.payload[i];
-  delete publish;
   return bufDataOut;
 }
 
@@ -432,7 +428,7 @@ int P2PMQTT::getType() {
             Serial.print("Topic: "); for(int i = 0; i < aux; i++) Serial.write(publish.topic[i]); Serial.println();
             aux = publish.length - publish.lengthTopicMSB*256 - publish.lengthTopicLSB - 2;
             Serial.print("Length Payload:: "); Serial.println(aux);
-            Serial.print("Payload: "); 
+            Serial.print("Payload: ");
 			for(int i = 0; i < aux; i++) {
 				Serial.print(publish.payload[i]); Serial.print(", ");
 			}
@@ -462,7 +458,6 @@ int P2PMQTT::getType() {
 			}
 			Serial.println();
           }
-          delete publish;
           break;
 
         case SUBSCRIBE:
@@ -499,7 +494,7 @@ int P2PMQTT::getType() {
           topic_s = new byte[length];
 		  for (int i=0; i<length; i++) {
             topic_s[i] = (byte) aac.read();
-		  }          
+		  }
           subscribe.topic = topic_s;
 
           // VARIABLE HEADER: QoS
@@ -543,7 +538,6 @@ int P2PMQTT::getType() {
             Serial.println("P2PMQTT::getType, buffer nach subscribe:");
             for(int m = 0; m < index; m++) { Serial.print(buffer[m], HEX); Serial.print(" "); }; Serial.println();
           }
-          delete subscribe;
           break;
 
         case UNSUBSCRIBE:
@@ -619,7 +613,6 @@ int P2PMQTT::getType() {
             // activate the following line for low level debugging
             //for(int m = 0; m < index; m++) { Serial.print(buffer[m], HEX); Serial.print(" "); }; Serial.println();
           }
-          delete unsubscribe;
           break;
 
         default:
