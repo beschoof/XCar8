@@ -1,10 +1,16 @@
 /* 1.9.17 */
+											  
+  
+																		 
+   
+
 #ifndef P2PMQTT_h
 #define P2PMQTT_h
 
 #include <AndroidAccessory.h>
 #include <Arduino.h>
 //#include "Stream.h"
+
 
  // Message types
  // note that 0x00 and 0x0F are reserved
@@ -185,7 +191,9 @@
  *  Class definition
  */
 class P2PMQTT : public Stream {
+
   public:
+
   // Constructor
   P2PMQTT(bool debug = false);
 
@@ -241,12 +249,16 @@ class P2PMQTT : public Stream {
     byte buffer[128];
 
     private:
+
     // shall we print out debug information?
     bool debug;
+
     // is there a connected object?
     boolean isConnectedObject;
+
     // USB buffer utils
     byte* getTopicUSB(int length);
+
 };
 
 #endif
