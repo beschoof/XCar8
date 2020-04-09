@@ -1,0 +1,756 @@
+init...
+###  + + + Stay + + + 
+...aac: begin...
+###  ### init connected failure
+start
+...aac: Device addressed... 
+...aac: Requesting device descriptor.
+
+...aac: found possible device. swithcing to serial mode
+
+...aac: device supports protocol 2 or newer, beware!
+
+...aac: Device addressed... 
+...aac: Requesting device descriptor.
+
+...aac: found android acessory device
+
+...aac: config desc
+
+...aac: interface desc
+
+...aac: interface desc
+
+1
+2
+->P2PMQTT: getType, MSG: 1
+***P2PMQTT:  connect lowlevel debug 
+*** FIXED HEADER
+MSG: 1
+Flags: 0
+Length: 22
+** VARIABLE HEADER
+Length Protocol: 7
+Protocol: P2PMQTT
+Protocol Version: 1
+Connect Flags: 0
+Keep Alive Time: 10
+Length Client ID: 7
+Client ID: android
+---
+###  getType: connect
+->P2PMQTT: getType, MSG: 8
+** Subscribe **
+** FIXED HEADER
+MSG: 8
+Flags: 10
+Length: 7
+** VARIABLE HEADER
+Msg ID: 0
+Length Topic: 2
+Topic: AN
+QoS: 0
+P2PMQTT::getType ok
+P2PMQTT::getType, buffer nach subscribe:
+82 7 0 0 0 2 41 4E 0 
+...P2PMQTT: checkTopic ok
+###  getType: subscribed
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 1, 1, 102, 9, 30, 26, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 1 1 66 9 1E 1A 0 
+48, 11, 0, 2, 65, 78, 1, 1, 102, 9, 30, 26, 0, 
+###  getType: publish
+1, 1, 102, 9, 30, 26, 0, 
+### -> got id.cmd.TRVSA  1 / 1 / 102 / 9 / 30 / 26 / 0
+### doPublish: VAL= 2, 13, 
+### doPublish: published rc/id: 1 bei id: 1
+###  ---> I N I T   mit carType = 102, rpm= 26, dPG = 1182
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 2, 3, 5, 0, 0, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 2 3 5 0 0 0 0 
+48, 11, 0, 2, 65, 78, 2, 3, 5, 0, 0, 0, 0, 
+###  getType: publish
+2, 3, 5, 0, 0, 0, 0, 
+### -> got id.cmd.TRVSA  2 / 3 / 5 / 0 / 0 / 0 / 0
+###  ---> WAIT dur = 5000
+###  + + + Stay + + + 
+### CMD done in time ...
+### doPublish: VAL= 0, 12, 
+### doPublish: published rc/id: 1 bei id: 2
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 3, 2, 5, 8, 13, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 3 2 5 8 D 0 0 
+48, 11, 0, 2, 65, 78, 3, 2, 5, 8, 13, 0, 0, 
+###  getType: publish
+3, 2, 5, 8, 13, 0, 0, 
+### -> got id.cmd.TRVSA  3 / 2 / 5 / 8 / 13 / 0 / 0
+###  +++ MOVE mit v/r: 40 / 90 :: 13 / 8
+### CMD done in time ...
+### doPublish: VAL= 0, 12, 
+### doPublish: published rc/id: 1 bei id: 3
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 4, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 4 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 4, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+4, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  4 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 5, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 5 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 5, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+5, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  5 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 6, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 6 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 6, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+6, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  6 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 7, 2, 0, 6, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 7 2 0 6 3 0 0 
+48, 11, 0, 2, 65, 78, 7, 2, 0, 6, 3, 0, 0, 
+###  getType: publish
+7, 2, 0, 6, 3, 0, 0, 
+### -> got id.cmd.TRVSA  7 / 2 / 0 / 6 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 70 :: 3 / 6
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 8, 2, 0, 6, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 8 2 0 6 3 0 0 
+48, 11, 0, 2, 65, 78, 8, 2, 0, 6, 3, 0, 0, 
+###  getType: publish
+8, 2, 0, 6, 3, 0, 0, 
+### -> got id.cmd.TRVSA  8 / 2 / 0 / 6 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 70 :: 3 / 6
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 9, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 9 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 9, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+9, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  9 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 10, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E A 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 10, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+10, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  10 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 11, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E B 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 11, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+11, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  11 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 12, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E C 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 12, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+12, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  12 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 13, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E D 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 13, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+13, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  13 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 14, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E E 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 14, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+14, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  14 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 15, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E F 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 15, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+15, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  15 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 16, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 10 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 16, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+16, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  16 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 17, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 11 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 17, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+17, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  17 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 18, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 12 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 18, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+18, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  18 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 19, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 13 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 19, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+19, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  19 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 20, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 14 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 20, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+20, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  20 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 21, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 15 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 21, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+21, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  21 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 22, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 16 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 22, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+22, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  22 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 23, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 17 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 23, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+23, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  23 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 24, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 18 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 24, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+24, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  24 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 25, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 19 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 25, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+25, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  25 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 26, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 1A 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 26, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+26, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  26 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 27, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 1B 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 27, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+27, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  27 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 28, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 1C 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 28, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+28, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  28 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 29, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 1D 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 29, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+29, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  29 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 30, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 1E 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 30, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+30, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  30 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 31, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 1F 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 31, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+31, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  31 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 32, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 20 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 32, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+32, 2, 0, 8, 3, 0, 0, 
+### -> got id.cmd.TRVSA  32 / 2 / 0 / 8 / 3 / 0 / 0
+###  +++ MOVE mit v/r: 140 / 90 :: 3 / 8
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 33, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 21 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 33, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+33, 2, 0, 8, 3, 0, 0, 
+
+
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 34, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 22 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 34, 2, 0, 8, 3, 0, 0, 
+###  getType: publish
+34, 2, 0, 8, 3, 0, 0, 
+
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 35, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 23 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 35, 2, 0, 8, 3, 0, 0, 
+
+Z!, 0, 0, 8, 3, 0, 0, 0, 2, 0, 2, 0, 7, 2, 14, 0, 0, 0, 0, 0, 2, 0, 32, 3, 2, 0, 193, 10, 24, 33, 31, 0, 0, 0, 0, 141, 55, 33, 0, 255, 0, 3, 0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6, 15, 7, 15, 15, 13, 0, 0, 16, 0, 0, 0, 0, 0, 0, 3, 3, 85, 0, 0, 0, 0, 0, 80, 1, 176, 184, 48, 0, 184, 0, 0, 0, 184, 0, 184, 184, 184, 0, 0, 24, 33, 128, 0, 0, 184, 184, 0, 0, 136, 184, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 184, 184, 0, 0, 135, 0, 0, 0, 0, 0, 1, 3, 0, 184, 184, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 3, 0, 184, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 3, 0, 184, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 4, 48, 0, 0, 184, 0, 184, 72, 248, 254, 208, 69, 0, 184, 184, 2, 184, 6, 184, 207, 0, 0, 184, 32, 0, 6, 184, 0, 0, 0, 184, 32, 0, 6, 184, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 0, 0, 0, 4, 4, 4, 0, 0, 0, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 0, 2, 0, 184, 171, 60, 0, 11, 64, 156, 0, 0, 0, 0, 184, 184, 32, 0, 6, 184, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 34, 0, 140, 0, 2, 3, 226, 
+
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 36, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 24 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 36, 2, 0, 8, 3, 0, 0, 
+
+[!, 0, 0, 8, 3, 0, 0, 0, 2, 0, 2, 0, 7, 2, 14, 0, 0, 0, 0, 0, 2, 0, 32, 3, 2, 0, 193, 10, 24, 33, 31, 0, 0, 0, 0, 141, 55, 1, 0, 255, 0, 3, 0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6, 15, 7, 15, 15, 13, 0, 0, 16, 0, 0, 0, 0, 0, 0, 3, 3, 225, 0, 0, 0, 0, 0, 80, 1, 160, 184, 48, 0, 184, 0, 0, 0, 184, 0, 184, 184, 184, 0, 0, 24, 33, 128, 0, 0, 184, 184, 0, 0, 136, 184, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 184, 184, 0, 0, 135, 0, 0, 0, 0, 0, 1, 3, 0, 184, 94, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 3, 0, 184, 113, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 3, 0, 184, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 4, 122, 0, 0, 184, 0, 184, 72, 248, 254, 208, 69, 0, 184, 184, 2, 184, 6, 184, 207, 0, 0, 184, 32, 0, 6, 184, 0, 0, 0, 184, 32, 0, 6, 184, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 0, 0, 0, 4, 4, 4, 0, 0, 0, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 0, 2, 0, 184, 178, 156, 0, 0, 64, 27, 0, 0, 0, 0, 184, 184, 32, 0, 6, 184, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 34, 0, 140, 0, 2, 3, 226, 
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 37, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 25 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 37, 2, 0, 8, 3, 0, 0, 
+\!, 0, 0, 8, 3, 0, 0, 0, 2, 0, 2, 0, 7, 2, 14, 0, 0, 0, 0, 0, 2, 0, 32, 3, 2, 0, 193, 10, 24, 33, 31, 0, 0, 0, 0, 141, 55, 33, 0, 255, 0, 3, 0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6, 15, 7, 15, 15, 13, 0, 0, 16, 0, 0, 0, 0, 0, 0, 3, 3, 105, 0, 0, 0, 0, 0, 80, 1, 176, 184, 48, 0, 184, 0, 0, 0, 184, 0, 184, 184, 184, 0, 0, 24, 33, 128, 0, 0, 184, 184, 0, 0, 136, 184, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 184, 184, 0, 0, 135, 0, 0, 0, 0, 0, 1, 3, 0, 184, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 3, 0, 184, 247, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 3, 0, 184, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 4, 12, 0, 0, 184, 0, 184, 72, 248, 254, 208, 69, 0, 184, 184, 2, 184, 6, 0, 207, 0, 0, 184, 32, 0, 6, 184, 0, 0, 0, 184, 32, 0, 6, 184, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 0, 0, 0, 4, 4, 4, 0, 0, 0, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 0, 2, 0, 184, 229, 57, 0, 0, 33, 156, 0, 0, 0, 0, 184, 184, 32, 0, 6, 184, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 34, 0, 140, 0, 2, 3, 226, 
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 38, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 26 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 38, 2, 0, 8, 3, 0, 0, 
+]!, 0, 0, 8, 3, 0, 0, 0, 2, 0, 2, 0, 7, 2, 14, 0, 0, 0, 0, 0, 2, 0, 32, 3, 2, 0, 193, 10, 24, 33, 31, 0, 0, 0, 0, 141, 55, 1, 0, 255, 0, 3, 0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6, 15, 7, 15, 15, 13, 0, 0, 16, 0, 0, 0, 0, 0, 0, 3, 3, 217, 0, 0, 0, 0, 0, 80, 1, 160, 184, 48, 0, 184, 0, 0, 0, 184, 0, 184, 184, 184, 0, 0, 24, 33, 128, 0, 0, 184, 184, 0, 0, 136, 184, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 184, 184, 0, 0, 135, 0, 0, 0, 0, 0, 1, 3, 0, 184, 136, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 3, 0, 184, 143, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 3, 0, 184, 86, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 4, 108, 0, 0, 184, 0, 184, 72, 248, 254, 208, 69, 0, 184, 184, 2, 184, 6, 184, 207, 0, 0, 184, 32, 0, 6, 184, 0, 0, 0, 184, 32, 0, 6, 184, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 0, 0, 0, 4, 4, 4, 0, 0, 0, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 0, 2, 0, 184, 140, 27, 0, 0, 64, 156, 0, 0, 0, 0, 184, 184, 32, 0, 6, 184, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 34, 0, 140, 0, 2, 3, 226, 
+->P2PMQTT: getType, MSG: 3
+** Publish **
+** FIXED HEADER **
+MSG: 3
+Flags: 0
+Length: 11
+** VARIABLE HEADER
+Length Topic: 2
+Topic: AN
+Length Payload:: 7
+Payload: 39, 2, 0, 8, 3, 0, 0, 
+P2PMQTT::getType, buffer nach publish:
+30 B 0 2 41 4E 27 2 0 8 3 0 0 
+48, 11, 0, 2, 65, 78, 39, 2, 0, 8, 3, 0, 0, 
+^!, 0, 0, 8, 3, 0, 0, 0, 2, 0, 2, 0, 7, 2, 14, 0, 0, 0, 0, 0, 2, 0, 32, 3, 2, 0, 193, 10, 24, 33, 31, 0, 0, 0, 0, 141, 55, 1, 0, 255, 0, 3, 0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6, 15, 7, 15, 15, 13, 0, 0, 16, 0, 0, 0, 0, 0, 0, 3, 3, 93, 0, 0, 0, 0, 0, 80, 1, 176, 184, 48, 0, 184, 0, 0, 0, 184, 0, 184, 184, 184, 0, 0, 24, 33, 128, 0, 0, 184, 184, 0, 0, 136, 184, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 184, 184, 0, 0, 135, 0, 0, 0, 0, 0, 1, 3, 0, 184, 246, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 3, 0, 184, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 3, 0, 184, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 184, 1, 4, 32, 0, 0, 184, 0, 184, 72, 248, 254, 208, 69, 0, 184, 184, 2, 184, 6, 184, 207, 0, 0, 184, 32, 0, 6, 184, 0, 0, 0, 184, 32, 0, 6, 184, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 0, 0, 0, 4, 4, 4, 0, 0, 0, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 0, 2, 0, 184, 146, 156, 0, 0, 64, 156, 0, 0, 0, 0, 184, 184, 32, 0, 6, 184, 0, 0, 0, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 184, 34, 0, 140, 0, 2, 3, 226, 
+->P2PMQTT: getType, MSG: 3
