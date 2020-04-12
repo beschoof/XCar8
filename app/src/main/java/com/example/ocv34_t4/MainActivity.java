@@ -368,7 +368,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                   tools.logge(logTAG, ":: onReceive retVal = " + rcVal + " -> " + Tools.b2s(payload));
                }
 
-               if (payload[0] < 16) {
+               if (payload[1] < 16) {
                   runMissionStep();  // Weiter geht's!
                }
             }
