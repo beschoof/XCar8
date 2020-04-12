@@ -1,5 +1,5 @@
 /*
-   Stand 09.04.20, 09:42, bigblack
+   Stand 10.04.20, 09:42, blue acer, mit lib vom xcar5
    - XCar6
    + LED-Anzeige
 
@@ -52,6 +52,7 @@ byte carType = 0;
 
 // MQTT
 #define mqttTopic "AN"
+byte* payload;  // def aus switch rausnemhemen, wegen crossing initialisation
 
 // Kommandos
 int plId, plCmd, plT, plR, plV, plS, plA; // Payload, kommt von ganz oben, Zeit, Kurvenradius, Geschw., Umdrehungsmessung, Winkel
@@ -141,7 +142,7 @@ void loop() {
   }
 
 // 1. gibt's was von oben?
-  type = mqtt.getType();
+  type = mqtt.getType(mqtt.buffer);
   showStat(0);
   if (type < 0) { goto loopEnd; }
 
@@ -153,7 +154,7 @@ void loop() {
      break;
 
   case SUBSCRIBE:  // die da oben deuten an, dass sie sich interessieren
-    subscribed = mqtt.checkTopic(type, mqttTopic);  // check "AN"
+    subscribed = mqtt.checkTopic(mqtt.buffer, type, mqttTopic);  // check "AN"
     if (subscribed) {
       logge (" getType: subscribed");
     } else {
@@ -163,7 +164,7 @@ void loop() {
 
   case PUBLISH:  // das kommt vom Android
       logge (" getType: publish");
-      byte* payload = mqtt.getPayload(type);
+      payload = mqtt.getPayload(mqtt.buffer, type);
       for (int k=0; k<7; k++) { Serial.print(payload[k]); Serial.print(", "); } Serial.println();
       plId  = (unsigned int) payload[0];
       plCmd = (unsigned int) payload[1];

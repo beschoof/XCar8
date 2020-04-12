@@ -216,11 +216,11 @@ class P2PMQTT : public Stream {
 
     using Print::write; // pull in write(str) and write(buf, size) from Print
 
-    int getType();
-    byte* getMsgPublishField(int field);
-    byte* getPayload(int type);
-    byte* getTopic(int type);
-    bool checkTopic(int type, char* topic);
+    int getType(byte* buffer);
+    byte* getMsgPublishField(byte* buffer, int field);
+    byte* getPayload(byte* buffer, int type);
+    byte* getTopic(byte* buffer, int type);
+    bool checkTopic(byte* buffer, int type, char* topic);
     bool cmpStr(byte* str1, char* str2, int length);
 
     // KEEP ALIVE TIMER

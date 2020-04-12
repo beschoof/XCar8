@@ -53,7 +53,7 @@ AndroidAccessory::AndroidAccessory(const char *manufacturer,
 
 boolean AndroidAccessory::begin(void) {
   powerOn();
-  Serial.println("...aac: begin...");
+  Serial.println("### init AndroidAccessory usb ok...");
   return true; // For forward compatibility with v2.x of the library
 }
 
@@ -90,11 +90,11 @@ bool AndroidAccessory::switchDevice(byte addr)
     int protocol = getProtocol(addr);
 
     if (protocol == 1) {
-        Serial.println(F("...aac: device supports protocol 1\n"));
+        Serial.print(F("device supports protocol 1\n"));
     } else if (protocol > 1) {
-        Serial.println(F("...aac: device supports protocol 2 or newer, beware!\n"));
+        Serial.print(F("device supports protocol 2 or newer, beware!\n"));
     } else {
-        Serial.println(F("...aac: could not read device protocol version\n"));
+        Serial.print(F("could not read device protocol version\n"));
         return false;
     }
 
@@ -128,21 +128,21 @@ bool AndroidAccessory::findEndpoints(byte addr, EP_RECORD *inEp, EP_RECORD *outE
 
     err = usb.getConfDescr(addr, 0, 4, 0, (char *)descBuff);
     if (err) {
-        Serial.println(F("...aac: Can't get config descriptor length\n"));
+        Serial.print(F("Can't get config descriptor length\n"));
         return false;
     }
 
 
     len = descBuff[2] | ((int)descBuff[3] << 8);
     if (len > sizeof(descBuff)) {
-        Serial.println(F("...aac: config descriptor too large\n"));
+        Serial.print(F("config descriptor too large\n"));
             /* might want to truncate here */
         return false;
     }
 
     err = usb.getConfDescr(addr, 0, len, 0, (char *)descBuff);
     if (err) {
-        Serial.println(F("...aac: Can't get config descriptor\n"));
+        Serial.print(F("Can't get config descriptor\n"));
         return false;
     }
 
@@ -157,11 +157,11 @@ bool AndroidAccessory::findEndpoints(byte addr, EP_RECORD *inEp, EP_RECORD *outE
 
         switch (descType) {
         case USB_DESCRIPTOR_CONFIGURATION:
-            Serial.println(F("...aac: config desc\n"));
+            Serial.print(F("config desc\n"));
             break;
 
         case USB_DESCRIPTOR_INTERFACE:
-            Serial.println(F("...aac: interface desc\n"));
+            Serial.print(F("interface desc\n"));
             break;
 
         case USB_DESCRIPTOR_ENDPOINT:
@@ -183,7 +183,7 @@ bool AndroidAccessory::findEndpoints(byte addr, EP_RECORD *inEp, EP_RECORD *outE
             break;
 
         default:
-            Serial.println(F("...aac: unkown desc type "));
+            Serial.print(F("unkown desc type "));
             Serial.println( descType, HEX);
             break;
         }
@@ -192,7 +192,7 @@ bool AndroidAccessory::findEndpoints(byte addr, EP_RECORD *inEp, EP_RECORD *outE
     }
 
     if (!(inEp->epAddr && outEp->epAddr))
-        Serial.println(F("...aac: can't find accessory endpoints"));
+        Serial.println(F("can't find accessory endpoints"));
 
     return inEp->epAddr && outEp->epAddr;
 }
@@ -222,7 +222,7 @@ bool AndroidAccessory::configureAndroid(void)
 
     err = usb.setConf( 1, 0, 1 );
     if (err) {
-        Serial.println(F("...aac: Can't set config to 1\n"));
+        Serial.print(F("Can't set config to 1\n"));
         return false;
     }
 
@@ -246,26 +246,26 @@ bool AndroidAccessory::isConnected(void)
     if (!connected &&
         usb.getUsbTaskState() >= USB_STATE_CONFIGURING &&
         usb.getUsbTaskState() != USB_STATE_RUNNING) {
-        Serial.println(F("...aac: Device addressed... "));
-        Serial.println(F("...aac: Requesting device descriptor.\n"));
+        Serial.print(F("\nDevice addressed... "));
+        Serial.print(F("Requesting device descriptor.\n"));
 
         err = usb.getDevDescr(1, 0, 0x12, (char *) devDesc);
         if (err) {
-            Serial.println(F("...aac: Device descriptor cannot be retrieved. Trying again\n"));
+            Serial.print(F("\nDevice descriptor cannot be retrieved. Trying again\n"));
             return false;
         }
 
         if (isAccessoryDevice(devDesc)) {
-            Serial.println(F("...aac: found android acessory device\n"));
+            Serial.print(F("found android acessory device\n"));
 
             connected = configureAndroid();
         } else {
-            Serial.println(F("...aac: found possible device. swithcing to serial mode\n"));
+            Serial.print(F("found possible device. swithcing to serial mode\n"));
             switchDevice(1);
         }
     } else if (usb.getUsbTaskState() == USB_DETACHED_SUBSTATE_WAIT_FOR_DEVICE) {
         if (connected)
-            Serial.println(F("...aac: disconnect\n"));
+            Serial.println(F("disconnect\n"));
         connected = false;
     }
 

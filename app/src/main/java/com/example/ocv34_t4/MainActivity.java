@@ -52,13 +52,14 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
    private PicAnalyzeProcess picAnalyzeProcess;
    boolean processStarted = true;
    boolean ocvMode = false;
+   int ocvDir = 0;
+   boolean ocvInited = false;
 
    long duration;
    long t0, t1 = SystemClock.uptimeMillis();
 
    // MQTT
    private WroxAccessory mAccessory;
-   private UsbManager mUsbManager;
    private UsbConnection12 connection;
    final String MQTT_TOPIC = "AN";
    String subscription;
@@ -85,7 +86,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
    protected static final byte ACTION_MIDDLE = 2;
    protected static final byte ACTION_RIGHT = 3;
    int oldDir = 0;
-   int newDir = 0; // left: -1, right: 1
    final static int CMD_INIT = 1;
    final static int CMD_MOVE = 2;
    final static int CMD_WAIT = 3;
@@ -113,7 +113,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
          tools.logge(logTAG, "onCreate beginn");
          missionFileName = (EditText) findViewById(R.id.MissionFileName);
          missionFileName.setText(sFileName1);
-         mUsbManager = (UsbManager) getSystemService(USB_SERVICE);
+         UsbManager mUsbManager = (UsbManager) getSystemService(USB_SERVICE);
          connection = new UsbConnection12(this, mUsbManager);
          mAccessory = new WroxAccessory(this, myLog);
          plCmdId = 0;
@@ -149,7 +149,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
    //////////////   click methods
    public void cmdTrace(View v) {
-      startOcvMode((byte)0, 170, 13);
+      startOcvMode((byte)0, 51, 70);
    }
 
    public void cmdForward(View v) {   // wird nur einmal gedrückt, arbeitet die gesamte Mission ab
@@ -174,64 +174,109 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
    // wird bei cmdForward angestoßen, und vom BroadcastReceiver
    void runMissionStep() {
-      MissionStep m = null;
-      m = myMission.getNextStep();
-      if (m == null) {
-         tools.logge(logTAG, "run Step = null");
-         doStop();
-         return;
-      }
-      ocvMode = false;
-      tools.logge(logTAG, "run step: " + myMission.getLine() + ": " + m.toString());
-      speakText("run step " + m.getCmd());
-
-      String cmd = m.getCmd();
-
       byte plCmd = 0; // drive (ggf. auch mit v=0)
       byte plT = 0;  // time
       byte plR = 0;  // radius
       byte plV = 0;  // geschw
       byte plS = 0;  // weg
       byte plA = 0;  // Winkel
-      int x = 0, y = 0; // farbenbereich
+      String cmd;
 
-      for (int i = 0; i < m.getParamKeys().length; i++) {
-         String pKey = m.getParamKeys()[i];
-         int iVal = m.getParamVals()[i];
-         if (pKey.equals("T")) { // bei >= 100 -> millis, sonst sek.
-            plT = (byte) iVal;
-         } else if (pKey.equals("R")) {
-            plR = (byte) (iVal + 8); // -7..7 -> 1..15  , keine 0
-         } else if (pKey.equals("V")) {
-            plV = (byte) (iVal + 8); // -7..7 -> 1..15  , keine 0
-         } else if (pKey.equals("S")) {
-            plS = (byte) iVal;
-         } else if (pKey.equals("A")) {
-            plA = (byte) iVal;
-         } else if (pKey.equals("X")) {
-            x = iVal;
-         } else if (pKey.equals("Y")) {
-            y = iVal;
+      if ( ! ocvMode) {
+
+         MissionStep m = null;
+         m = myMission.getNextStep();
+         if (m == null) {
+            tools.logge(logTAG, "run Step = null");
+            doStop();
+            return;
          }
-      }
+         ocvMode = false;
+         tools.logge(logTAG, "run step: " + myMission.getLine() + ": " + m.toString());
+         speakText("run step " + m.getCmd());
 
-      if (cmd.equals("INIT")) { // == Init für car type
-         plCmd = CMD_INIT;
-         tools.logge(logTAG, "init: " + plT);
-      } else if (cmd.equals("WAIT")) { // == MOVE mit v=0
-         plCmd = CMD_WAIT;
-         tools.logge(logTAG, "wait: " + plT);
-      } else if (cmd.equals("MOVE")) {
+         cmd = m.getCmd();
+
+         int x = 0, y = 0; // farbenbereich
+
+         for (int i = 0; i < m.getParamKeys().length; i++) {
+            String pKey = m.getParamKeys()[i];
+            int iVal = m.getParamVals()[i];
+            switch (pKey) {
+               case "T":  // bei >= 100 -> millis, sonst sek.
+                  plT = (byte) iVal;
+                  break;
+               case "R":
+                  plR = (byte) (iVal + 8); // -7..7 -> 1..15  , keine 0
+                  break;
+               case "V":
+                  plV = (byte) (iVal + 8); // -7..7 -> 1..15  , keine 0
+                  break;
+               case "S":
+                  plS = (byte) iVal;
+                  break;
+               case "A":
+                  plA = (byte) iVal;
+                  break;
+               case "X":
+                  x = iVal;
+                  break;
+               case "Y":
+                  y = iVal;
+                  break;
+            }
+         }
+
+         switch (cmd) {
+            case "INIT":  // == Init für car type
+               plCmd = CMD_INIT;
+               tools.logge(logTAG, "init: " + plT);
+               break;
+            case "WAIT":  // == MOVE mit v=0
+               plCmd = CMD_WAIT;
+               tools.logge(logTAG, "wait: " + plT);
+               break;
+            case "MOVE":
+               plCmd = CMD_MOVE; // drive
+               tools.logge(logTAG, "move");
+               break;
+            case "FIND":
+               tools.logge(logTAG, "find");
+               startOcvMode(plT, x, y);   // siehe unten
+               return;
+            default:
+               tools.logge(logTAG, "Error bei runMissionStep::Unbekanntes Kommando: " + cmd);
+               doStop();
+               return;
+         }
+      } else { // also ocvMode
          plCmd = CMD_MOVE; // drive
-         tools.logge(logTAG, "move");
-      } else if (cmd.equals("FIND")) {
-         tools.logge(logTAG, "move");
-         startOcvMode(plT, x, y);   // siehe unten
-         return;
-      } else {
-         tools.logge(logTAG, "Error bei runMissionStep::Unbekanntes Kommando: " + cmd);
-         doStop();
-         return;
+         plT = 1;
+         plV = 3;
+         String dirText;
+         cmd = "FIND";
+         switch (ocvDir) {
+            case ACTION_LEFT:
+               plR = 10;
+               dirText = "left";
+               break;
+            case ACTION_MIDDLE:
+               plR = 8;
+               dirText = "middle";
+               break;
+            case ACTION_RIGHT:
+               plR = 6;
+               dirText = "right";
+               break;
+            default:
+               plR = 0;
+               dirText = "wrong";
+         }
+         if (oldDir != ocvDir) {
+            speakText("go " + dirText);
+            oldDir = ocvDir;
+         }
+
       }
       sendToCar (plCmd,plT,plR,plV,plS,plA, cmd);
    }
@@ -323,7 +368,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                   tools.logge(logTAG, ":: onReceive retVal = " + rcVal + " -> " + Tools.b2s(payload));
                }
 
-               if (! ocvMode && payload[0] < 16) {
+               if (payload[0] < 16) {
                   runMissionStep();  // Weiter geht's!
                }
             }
@@ -351,7 +396,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       textView = findViewById(R.id.textView);
 //      mOpenCvCameraView.setCameraIndex(CameraBridgeViewBase.CAMERA_ID_FRONT);  // Handy
       mOpenCvCameraView.enableView();
-      picAnalyzeProcess = new PicAnalyzeProcess(mOpenCvCameraView, this, textView, mHandler, x, y);
+      picAnalyzeProcess = new PicAnalyzeProcess(mOpenCvCameraView, this, textView, mHandler2, x, y);
    }
 
    private void stopOcvMode() {
@@ -365,13 +410,10 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
       @Override
       public void onManagerConnected(int status) {
-         switch (status) {
-            case LoaderCallbackInterface.SUCCESS: {
-               Log.i(logTAG, "OpenCV loaded successfully");
-            } break;
-            default: {
-               super.onManagerConnected(status);
-            } break;
+         if (status == LoaderCallbackInterface.SUCCESS) {
+            Log.i(logTAG, "OpenCV loaded successfully");
+         } else {
+            super.onManagerConnected(status);
          }
       }
    };
@@ -459,5 +501,16 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       }
    };
 
+   private  Handler mHandler2 = new Handler() {
+      @Override
+      public void handleMessage(Message msg) {
+         ocvDir = msg.what;
+         Log.w(logTAG, "  +++ found direction : " + ocvDir);
+         if (! ocvInited) {
+            ocvInited = true;
+            runMissionStep();
+         }
+      }
+   };
 
 }
