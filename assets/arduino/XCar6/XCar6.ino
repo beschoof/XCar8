@@ -1,5 +1,5 @@
 /*
-   Stand 10.04.20, 09:42, blue acer, mit lib vom xcar5
+   Stand 14.04.20, 16:00, bigblack
    - XCar6
    + LED-Anzeige
 
@@ -323,13 +323,13 @@ void doPublish(int rc, byte* val)  {  //  wir sind rum
     bval[1] = rc;
     String valStr = "";
     for (int i=0; i<sizeof(val); i++) {
-      bval[i+2] = val[i];
-    valStr += String(val[i]) + ", ";
+      if (sizeof(val) < 6) bval[i+2] = val[i];
+      valStr += String(val[i]) + ", ";
     }
     logge("doPublish: VAL= " + valStr);
     pub.payload = bval;
     pub.fixedHeader = 48;
-    pub.length = 4 + 2 + sizeof(val);  // 4 + bval
+    pub.length = 4 + 2 + 6;  // 4 + bval
     pub.lengthTopicMSB = 0;
     pub.lengthTopicLSB = 2;  // length of  mqttTopic
     pub.topic = (byte*) mqttTopic;  // "AN" s. oben
