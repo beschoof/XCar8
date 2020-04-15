@@ -1,7 +1,4 @@
-/* 1.9.17 */
-											  
-  
-																		 
+/* 15.4.20 */
    
 
 #ifndef P2PMQTT_h
@@ -10,7 +7,6 @@
 #include <AndroidAccessory.h>
 #include <Arduino.h>
 //#include "Stream.h"
-
 
  // Message types
  // note that 0x00 and 0x0F are reserved
@@ -86,13 +82,13 @@
     // Variable Header
     byte lengthProtocolNameMSB;
     byte lengthProtocolNameLSB;
-    byte * protocolName;
     byte protocolVersion;
     byte connectFlags;
     byte keepAliveMSB;
     byte keepAliveLSB;
     byte clientIdMSB;
     byte clientIdLSB;
+    byte * protocolName;
     byte * clientId;
   } P2PMQTTconnect;
 
@@ -128,8 +124,8 @@
     byte msgIdLSB;
     byte lengthTopicMSB;
     byte lengthTopicLSB;
-    byte * topic;
     byte topicQoS;
+    byte * topic;
   } P2PMQTTsubscribe;
 
   // P2PMQTT SUBACK package
@@ -194,16 +190,15 @@ class P2PMQTT : public Stream {
 
   public:
 
-  // Constructor
-  P2PMQTT(bool debug = false);
+	// Constructor
+	P2PMQTT(bool debug = false);
 
-  // methods
-  bool begin(const char* model = "default");
-  bool begin(   const char *manufacturer, const char *model, const char *description,
+	// methods
+	bool begin(const char* model = "default");
+	bool begin(   const char *manufacturer, const char *model, const char *description,
                 const char *version, const char *uri, const char *serial );
 						  
-  int subscribe(P2PMQTTsubscribe);
-  int publish(P2PMQTTpublish pub);
+	void publish(P2PMQTTpublish pub);
     bool isConnected(void);
     virtual size_t write(uint8_t *buff, size_t len);
 
@@ -211,15 +206,12 @@ class P2PMQTT : public Stream {
     virtual int peek(void);
     virtual int read(void);
 
-    virtual void flush();
     virtual size_t write(uint8_t);
 
     using Print::write; // pull in write(str) and write(buf, size) from Print
 
     int getType(byte* buffer);
-    byte* getMsgPublishField(byte* buffer, int field);
     byte* getPayload(byte* buffer, int type);
-    byte* getTopic(byte* buffer, int type);
     bool checkTopic(byte* buffer, int type, char* topic);
     bool cmpStr(byte* str1, char* str2, int length);
 
@@ -247,6 +239,15 @@ class P2PMQTT : public Stream {
     // as we work with a reduced version of MQTT we will make all our packages
     // max length 128 bytes, which means 2 bytes for the fixed header and 126 for the rest
     byte buffer[128];
+/*  [0]: FixedHeader
+	[1]: length
+	[2]: lengthTopicMSB
+	[3]: lengthTopicLSB
+	[4...3+lengthTopicLSB]: Topic
+	[5 + lengthTopicLSB ...5 + length - lengthTopicLSB - 2]: payload
+	 << payloadLength = length - lengthTopicLSB - 2 >>
+  */	
+	
 
     private:
 
@@ -258,6 +259,8 @@ class P2PMQTT : public Stream {
 
     // USB buffer utils
     byte* getTopicUSB(int length);
+	
+	void debugB(byte* b, String msg);
 
 };
 

@@ -1,5 +1,5 @@
 /*
-   Stand 14.04.20, 16:00, bigblack
+   Stand 15.04.20, 16:00, bigblack
    - XCar6
    + LED-Anzeige
 
@@ -51,7 +51,7 @@ byte carType = 0;
 #define cmdStop  9
 
 // MQTT
-#define mqttTopic "AN"
+#define MQTT_TOPIC "AN"
 byte* payload;  // def aus switch rausnemhemen, wegen crossing initialisation
 
 // Kommandos
@@ -68,6 +68,7 @@ unsigned long loopTime;
 boolean iAmActive = false;
 int type = 0;
 int rSign = 0; // Richtung des Radius
+int b2sOld = 0;
 
 boolean doCountRots = false;
 int rots = 0;  // Umdrehungen je Kommando, wenn plS=1
@@ -143,7 +144,6 @@ void loop() {
 
 // 1. gibt's was von oben?
   type = mqtt.getType(mqtt.buffer);
-  showStat(0);
   if (type < 0) { goto loopEnd; }
 
 // 2. Auswerten des Pakets
@@ -154,7 +154,7 @@ void loop() {
      break;
 
   case SUBSCRIBE:  // die da oben deuten an, dass sie sich interessieren
-    subscribed = mqtt.checkTopic(mqtt.buffer, type, mqttTopic);  // check "AN"
+    subscribed = mqtt.checkTopic(mqtt.buffer, type, MQTT_TOPIC);  // der Form halber... check "AN"
     if (subscribed) {
       logge (" getType: subscribed");
     } else {
@@ -321,22 +321,19 @@ void doPublish(int rc, byte* val)  {  //  wir sind rum
     byte bval[8];  for(int i=0; i<8; i++) {bval[i] = 0;}
     bval[0] = plId;
     bval[1] = rc;
-    String valStr = "";
-    for (int i=0; i<sizeof(val); i++) {
-      if (sizeof(val) < 6) bval[i+2] = val[i];
-      valStr += String(val[i]) + ", ";
+    for (int i=0; i<min(6, sizeof(val)); i++) {
+      bval[i+2] = val[i];
     }
-    logge("doPublish: VAL= " + valStr);
+    logge(bval, "doPublish: payload");
     pub.payload = bval;
     pub.fixedHeader = 48;
-    pub.length = 4 + 2 + 6;  // 4 + bval
+    pub.length = 4 + 2 + 6;  // 4 + payload
     pub.lengthTopicMSB = 0;
-    pub.lengthTopicLSB = 2;  // length of  mqttTopic
-    pub.topic = (byte*) mqttTopic;  // "AN" s. oben
+    pub.lengthTopicLSB = 2;  // length of  MQTT_TOPIC
+    pub.topic = (byte*) MQTT_TOPIC;  // "AN" s. oben
     mqtt.publish(pub);
     logge("doPublish: published rc/id: " + String(rc) + " bei id: " + plId);
     iAmActive = false;
-    showStat(statStandby);
 
     doCountGyro = false;
     dips = 0;
@@ -368,6 +365,14 @@ void logge(String msg) {
     lastMsg = msg;
     Serial.println("### " + msg);
   }
+}
+
+void logge(byte *b, String msg) {
+  String t = msg + ": ";
+  for (int i=0; i<sizeof(b); i++) {
+     t += (String) b[i] + ", ";
+  }  
+  Serial.println(t);
 }
 
 int sign(long x) {

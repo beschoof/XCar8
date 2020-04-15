@@ -1,17 +1,6 @@
 /*
  * P2PMQTT protocol implementation for Arduino
- *
- * 27.12.15 bs
- * Fehler in checkTopic byte bufData[128];  beseitigt
- *
- * 01.08.2017 bs
- * - Umstrukturieren der defs byte xxx[length] wegen crossing initialization error
- * - Publish: payload = byte[3] 
- * 
- * 8.9.17: an die Strings ein \0
- 
- * 10.3.2018: publish: Verlaengern des PayloadArrays
- 
+ * 15.04.2020: byte* -> byte[n]
  */
 
 #include "P2PMQTT.h"
@@ -83,152 +72,76 @@ size_t P2PMQTT::write(uint8_t c) {
   return aac.write(&c, 1);
 }
 
-void P2PMQTT::flush() {
-  /*
-    "Waits for the transmission of outgoing [...] data to complete."
 
-    from <http://arduino.cc/en/Serial/Flush>
-
-    We're treating this as a no-op at the moment.
-  */
-}
-
-int P2PMQTT::subscribe(P2PMQTTsubscribe P2PMQTTSubs) {
-//    aac.write(&P2PMQTTSubs, sizeof(P2PMQTTSubs));
-  return 0;
-}
-
-int P2PMQTT::publish(P2PMQTTpublish pub) {
+void P2PMQTT::publish(P2PMQTTpublish pub) {  // write pub to aac
   byte msg[14];
   msg[0] = pub.fixedHeader;
   msg[1] = pub.length;
   msg[2] = pub.lengthTopicMSB;
   msg[3] = pub.lengthTopicLSB;
   msg[4] = pub.topic[0];
-  msg[5] = pub.topic[1];
-  for (int i=0; i<pub.length-4; i++) {
+  msg[5] = pub.topic[1];  
+  for (int i=0; i< min(8, pub.length-4); i++) {
 	  msg[6+i] = pub.payload[i];
   }
   aac.write(msg, pub.length+2);
-  String s = "";
-  for (int i=0; i< pub.length +2; i++) {
-	s += String(msg[i]) + ", ";  
-  } 
-  Serial.println("P2PMQTT::publish: ok : " + s);
-  return 0;
+  debugB(msg, "P2PMQTT::publish");
 }
 
 bool P2PMQTT::checkTopic(byte* buffer, int type, char* topic) {
-  P2PMQTTsubscribe subscribe;
-  int index = 0; int aux = 0;
-  byte bufData[128];   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ! ! F E H L E R   27.12.15 bs
+  byte bufData[8];
   bool result = false;
+  int tLen = 0;
 
   switch(type) {
     case SUBSCRIBE:
-
-      Serial.print("P2PMQTT::checkTopic auf "); Serial.println(topic);
-  	  Serial.print("P2PMQTT::checkTopic bufData= ");
-      subscribe.fixedHeader = buffer[index++];
-      subscribe.length = buffer[index++];
-      subscribe.msgIdMSB = buffer[index++];
-      subscribe.msgIdLSB = buffer[index++];
-      subscribe.lengthTopicMSB = buffer[index++];
-      subscribe.lengthTopicLSB = buffer[index++];
-      aux = subscribe.lengthTopicMSB*256 + subscribe.lengthTopicLSB;
-      for(int i = 0; i < aux; i++) {
-         bufData[i] = buffer[index++];
-         Serial.print( bufData[i] );
+	  int tLen = buffer[5];
+      for(int i = 0; i < min(8, tLen); i++) {
+         bufData[i] = buffer[6+i];
          }
-         Serial.println();
-      result = P2PMQTT::cmpStr(bufData, topic, aux);
-      if(result) Serial.println("P2PMQTT::checkTopic ok"); else Serial.println("P2PMQTT::checkTopic false");
+	  result = P2PMQTT::cmpStr(bufData, topic, tLen);	 
+      if(result) Serial.println("P2PMQTT::checkTopic ok"); 
+	        else debugB(bufData, "P2PMQTT::checkTopic false: " + (String)topic);
       break;
     default:
       break;
   }
-
   return result;
-}
-
-// packs the Topic as a byte array
-byte* P2PMQTT::getTopic(byte* buffer, int type) {
-  P2PMQTTpublish publish;
-  int index = 0; int aux = 0;
-  byte bufDataOut[128];
-
-  switch(type) {
-    case PUBLISH:
-      publish.fixedHeader = buffer[index++];
-      publish.length = buffer[index++];
-      publish.lengthTopicMSB = buffer[index++];
-      publish.lengthTopicLSB = buffer[index++];
-      aux = publish.lengthTopicMSB*256 + publish.lengthTopicLSB;
-      for(int i = 0; i < aux; i++) bufDataOut[i] = buffer[index++];
-      break;
-    default:
-      break;
-  }
-
-  return bufDataOut;
 }
 
 // packs the Payload as a byte array
 byte* P2PMQTT::getPayload(byte* buffer, int type) {
-  P2PMQTTpublish publish;
-  int index = 0; int aux = 0; int i = 0;
-  static byte bufDataOut[160];
-
+	if(debug) {
+		Serial.println("P2PMQTT::getPayload, buffer vor getPayload:");
+		for(int m = 0; m < 14; m++) { Serial.print(buffer[m], HEX); Serial.print(" "); }; Serial.println();
+    }	
+//  byte * bufDataOut;
+//  bufDataOut = new byte[16];
+	  static byte bufDataOut[160];
   switch(type) {
     case PUBLISH:
-      publish.fixedHeader = buffer[index++];
-      publish.length = buffer[index++];
-      publish.lengthTopicMSB = buffer[index++];
-      publish.lengthTopicLSB = buffer[index++];
-      aux = publish.lengthTopicMSB*256 + publish.lengthTopicLSB;
-      for(i = 0; i < aux; i++) publish.topic[i] = buffer[index++];
-      aux = publish.length - publish.lengthTopicMSB*256 - publish.lengthTopicLSB - 2;
-      for(i = 0; i < aux; i++) bufDataOut[i] = buffer[index++];
-//      bufDataOut[i++] = 0; // put an end of string marker
+	  int bufLen = buffer [1];
+	  int topicLen = buffer[3];
+	  int payloadLen = bufLen - topicLen - 2;
+	  for(int i=0; i < payloadLen; i++) {
+		  bufDataOut[i] = buffer[i + 6];
+	  }
       break;
     default:
       break;
   }
-  return bufDataOut;
-}
-
-// packs the payload as Lenght<<Payload so that it can be used with byte arrays
-byte* P2PMQTT::getMsgPublishField(byte* buffer, int field) {
-Serial.print("looking for: "); Serial.println(field);
-  P2PMQTTpublish publish;
-  byte bufDataOut[128];
-  int index = 0; int aux = 0;
-  publish.fixedHeader = buffer[index++];
-  if(field == 0) {
-    bufDataOut[0] = publish.fixedHeader;
-    return bufDataOut;
-  }
-  field--;
-  publish.length = buffer[index++];
-  if(field == 0) bufDataOut[0] = publish.length; field--;
-  publish.lengthTopicMSB = buffer[index++];
-  if(field == 0) bufDataOut[0] = publish.lengthTopicMSB; field--;
-  publish.lengthTopicLSB = buffer[index++];
-  if(field == 0) bufDataOut[0] = publish.lengthTopicLSB; field--;
-  aux = publish.lengthTopicMSB*256 + publish.lengthTopicLSB;
-  for(int i = 0; i < aux; i++) publish.topic[i] = buffer[index++];
-  if(field == 0) for(int i = 0; i < aux; i++) bufDataOut[i] = publish.topic[i]; field--;
-  aux = publish.length - publish.lengthTopicMSB*256 - publish.lengthTopicLSB - 2;
-  for(int i = 0; i < aux; i++) publish.payload[i] = buffer[index++];
-  if(field == 0) for(int i = 0; i < aux; i++) bufDataOut[i] = publish.payload[i];
   return bufDataOut;
 }
 
 // read next message in the buffer
 // assume it is properly formatted
 int P2PMQTT::getType(byte* buffer) {
-  int length = 0; int totalLength = 0; int msb = 0; int lsb = 0; int valUsb = 0;
-  int index = 0; int aux = 0;
+  int length = 0; int totalLength = 0; 
+  int msb = 0; int 
+  lsb = 0; 
+  int valUsb = 0;
+  int index = 0; 
+  int aux = 0;
   volatile int firstByte = 0; // the first byte seems to break otherwise
   byte* protocolName;
   byte* clientId;
@@ -236,7 +149,6 @@ int P2PMQTT::getType(byte* buffer) {
   byte* topic_us;
   byte* topic_s;
   byte* topic;
-  
   
   if (aac.isConnected()) {
 
@@ -249,100 +161,71 @@ int P2PMQTT::getType(byte* buffer) {
         Serial.println(firstByteMSB);
       }
       switch (firstByteMSB) {
-        case PINGREQ:
-          // declare the object to store the whole message
-          P2PMQTTpingreq pingreq;
-
-          // FIXED HEADER: first byte, message type + flags
-          pingreq.fixedHeader = firstByte;
-
-          // FIXED HEADER: Length
+        case PINGREQ:          
+          P2PMQTTpingreq pingreq; // declare the object to store the whole message
+          pingreq.fixedHeader = firstByte;  // FIXED HEADER: first byte, message type + flags
+          
           while(aac.available() <= 0) {};
-          totalLength = aac.read();
+          totalLength = aac.read(); // FIXED HEADER: Length
           pingreq.length = totalLength;
-
           // VARIABLE HEADER: NONE!
-
-          // if debugging, print things to the Serial port in a nice way
-          if(debug) {
+          if(debug) { 
             Serial.println("** Ping Request **");
             Serial.println("** FIXED HEADER");
             Serial.print("MSG: "); Serial.println(pingreq.fixedHeader >> 4 & 0x0F);
             Serial.print("Flags: "); Serial.println(pingreq.fixedHeader & 0x0F, BIN);
             Serial.print("Length: "); Serial.println(pingreq.length);
-          }
-
-          // update the buffer
-          index = 0;
+          }         
+          index = 0;  // update the buffer
           buffer[index++] = pingreq.fixedHeader;
           buffer[index++] = pingreq.length;
-
-          if(debug) {
-            // activate the following line for low level debugging
+          if(debug) { // activate the following line for low level debugging            
             //for(int m = 0; m < index; m++) { Serial.print(buffer[m], HEX); Serial.print(" "); }; Serial.println();
           }
           break;
 
         case CONNECT:
-          // declare the object to store the whole message
-          P2PMQTTconnect connect;
-
-          // FIXED HEADER: first byte, message type + flags
-          connect.fixedHeader = firstByte;
-
-          // FIXED HEADER: Length
+          P2PMQTTconnect connect;  // declare the object to store the whole message         
+          connect.fixedHeader = firstByte; // FIXED HEADER: first byte, message type + flags        
           while(aac.available() <= 0) {};
-          totalLength = aac.read();
+          totalLength = aac.read();  // FIXED HEADER: Length
           connect.length = totalLength;
-
-          // VARIABLE HEADER: protocol length
+          
           while(aac.available() < 2) {};
-          msb = aac.read(); lsb = aac.read();
+          msb = aac.read();  // VARIABLE HEADER: protocol length
+		  lsb = aac.read(); 
           length = msb*256 + lsb;
           connect.lengthProtocolNameMSB = msb;
-          connect.lengthProtocolNameLSB = lsb;
-
-          // VARIABLE HEADER: protocol name
+          connect.lengthProtocolNameLSB = lsb;         
           while(aac.available() < length) {};
-          protocolName = new byte[length];
+          protocolName = new byte[length];  // VARIABLE HEADER: protocol name
 		  for (int i=0; i<length; i++) {
             protocolName[i] = (byte) aac.read();
 		  }
-          /*  while(length) {
-            valUsb = aac.read();
-            protocolName[sizeof(protocolName)-length] = (byte) valUsb;
-			Serial.println("pn: " + String(valUsb) + " == " + ((char)valUsb));
-            length--;
-          }
-		  protocolName[sizeof(protocolName)] = 0; */
           connect.protocolName = protocolName;
-
-          // VARIABLE HEADER: protocol version
+          
           while(aac.available() <= 0) {};
-          valUsb = aac.read();
-          connect.protocolVersion = valUsb;
-
-          // VARIABLE HEADER: connect flags
+          valUsb = aac.read();  // VARIABLE HEADER: protocol version
+          connect.protocolVersion = valUsb;          
           while(aac.available() <= 0) {};
-          valUsb = aac.read();
+          valUsb = aac.read();  // VARIABLE HEADER: connect flags
           connect.connectFlags = valUsb;
-
-          // VARIABLE HEADER: keep alive time
+          
           while(aac.available() < 2) {};
-          msb = aac.read(); lsb = aac.read();
+          msb = aac.read(); // VARIABLE HEADER: keep alive time
+		  lsb = aac.read();
           length = msb*256 + lsb;
           connect.keepAliveMSB = msb;
           connect.keepAliveLSB = lsb;
-
-          // VARIABLE HEADER: length client ID
+          
           while(aac.available() < 2) {};
-          msb = aac.read(); lsb = aac.read();
+          msb = aac.read(); // VARIABLE HEADER: length client ID
+		  lsb = aac.read();
           length = msb*256 + lsb;
           connect.clientIdMSB = msb;
           connect.clientIdLSB = lsb;
-
-          // VARIABLE HEADER: client ID
-          clientId = new byte[length];
+          
+          clientId = new byte[length]; // VARIABLE HEADER: client ID
 		  for (int i=0; i<length; i++) {
             clientId[i] = (byte) aac.read();
 		  }
@@ -350,7 +233,7 @@ int P2PMQTT::getType(byte* buffer) {
 
           // if debugging, print things to the Serial port in a nice way
           if(debug) {
-            Serial.println("** getType Connect **");
+            Serial.println("** P2PMQTT::getType Connect **");
             Serial.println("** FIXED HEADER");
             Serial.print("MSG: "); Serial.println(connect.fixedHeader >> 4 & 0x0F);
             Serial.print("Flags: "); Serial.println(connect.fixedHeader & 0x0F, BIN);
@@ -390,28 +273,23 @@ int P2PMQTT::getType(byte* buffer) {
           }
           break;
 
-        case PUBLISH:
-          // declare the object to store the whole message
-          P2PMQTTpublish publish;
-
-          // FIXED HEADER: first byte, message type + flags
-          publish.fixedHeader = firstByte;
-
-          // FIXED HEADER: Length
+        case PUBLISH:         
+          P2PMQTTpublish publish; // declare the object to store the whole message
+          publish.fixedHeader = firstByte; // FIXED HEADER: first byte, message type + flags
+          
           while(aac.available() <= 0) {};
-          totalLength = aac.read();
+          totalLength = aac.read(); // FIXED HEADER: Length
           publish.length = totalLength;
-
-          // VARIABLE HEADER: topic length
+          
           while(aac.available() < 2) {};
-          msb = aac.read(); lsb = aac.read();
+          msb = aac.read(); // VARIABLE HEADER: topic length
+		  lsb = aac.read();
           length = msb*256 + lsb;
           publish.lengthTopicMSB = msb;
           publish.lengthTopicLSB = lsb;
-
-          // VARIABLE HEADER: topic name
+          
           while(aac.available() < length) {};
-          topic = new byte[length];
+          topic = new byte[length];  // VARIABLE HEADER: topic name
 		  for (int i=0; i<length; i++) {
             topic[i] = (byte) aac.read();
 		  }
@@ -427,7 +305,7 @@ int P2PMQTT::getType(byte* buffer) {
 
           // if debugging, print things to the Serial port in a nice way
           if(debug) {
-            Serial.println("** Publish **");
+            Serial.println("** P2PMQTT::getType Publish **");
             Serial.println("** FIXED HEADER");
             Serial.print("MSG: "); Serial.println(publish.fixedHeader >> 4 & 0x0F);
             Serial.print("Flags: "); Serial.println(publish.fixedHeader & 0x0F, BIN);
@@ -442,7 +320,7 @@ int P2PMQTT::getType(byte* buffer) {
 			for(int i = 0; i < aux; i++) {
 				Serial.print(publish.payload[i]); Serial.print(", ");
 			}
-				Serial.println();
+			Serial.println();
           }
 
           // update the buffer
@@ -464,33 +342,28 @@ int P2PMQTT::getType(byte* buffer) {
           }
           break;
 
-        case SUBSCRIBE:
-          // declare the object to store the whole message
-          P2PMQTTsubscribe subscribe;
-          Serial.println("P2PMQTT::getType subscribe");
-
-          // FIXED HEADER: first byte, message type + flags
-          subscribe.fixedHeader = firstByte;
-
-          // FIXED HEADER: Length
+        case SUBSCRIBE:          
+          P2PMQTTsubscribe subscribe;  // declare the object to store the whole message          
+          subscribe.fixedHeader = firstByte; // FIXED HEADER: first byte, message type + flags
+          
           while(aac.available() <= 0) {};
-          totalLength = aac.read();       // +++++++++++ 2. byte
+          totalLength = aac.read();    // FIXED HEADER: Length
           subscribe.length = totalLength;
-          Serial.println("P2PMQTT::getType read length: " + String(totalLength));
-
-          // VARIABLE HEADER: message ID
+          
           while(aac.available() < 2) {};
-          msb = aac.read(); lsb = aac.read();    // +++++++++++ 3.+4. byte
+          msb = aac.read();  // VARIABLE HEADER: message ID
+		  lsb = aac.read();    
           subscribe.msgIdMSB = msb;
           subscribe.msgIdLSB = lsb;
 
           // the payload on the subscription is the remaining
           // in the subscription message. However, as we are
           // implementing a single topic subscription system
-          // what remains is the topic legnth, the name and the QoS
+          // what remains is the topic length, the name and the QoS
           // VARIABLE HEADER: topic length
           while(aac.available() < 2) {};
-          msb = aac.read(); lsb = aac.read();    // +++++++++++ 5.+6. byte
+          msb = aac.read(); 
+		  lsb = aac.read();    
           length = msb*256 + lsb;
           subscribe.lengthTopicMSB = msb;
           subscribe.lengthTopicLSB = lsb;
@@ -509,7 +382,7 @@ int P2PMQTT::getType(byte* buffer) {
 
           // if debugging, print things to the Serial port in a nice way
           if(debug) {
-            Serial.println("** Subscribe **");
+            Serial.println("** P2PMQTT::getType Subscribe **");
             Serial.println("** FIXED HEADER");
             Serial.print("MSG: "); Serial.println(subscribe.fixedHeader >> 4 & 0x0F);
             Serial.print("Flags: "); Serial.println(subscribe.fixedHeader & 0x0F, BIN);
@@ -539,8 +412,8 @@ int P2PMQTT::getType(byte* buffer) {
 
           if(debug) {
             // activate the following line for low level debugging
-            Serial.println("P2PMQTT::getType, buffer nach subscribe:");
-            for(int m = 0; m < index; m++) { Serial.print(buffer[m], HEX); Serial.print(" "); }; Serial.println();
+            // Serial.println("P2PMQTT::getType, buffer nach subscribe:");
+            // for(int m = 0; m < index; m++) { Serial.print(buffer[m], HEX); Serial.print(" "); }; Serial.println();
           }
           break;
 
@@ -648,77 +521,12 @@ byte* P2PMQTT::getTopicUSB(int length) {
   return topic;
 }
 
-
-/*
- * Things we left out but you could helps us out with
- *
- */
-
-/*
-// this is not working because the processor has a really hard
-// time handling byte arrays of unknown sizes ... the error comes
-// when trying to send back the struct, the byte arrays get corrupted
-// therefore we choose to parse this information on the applications
-// instead of doing it on the API. We keep this code here as a reference
-// coz maybe you, dear reader, will get an idea on how to make it work
-// PS. we tried both having it as reference and getting the method to
-// return a struct
-void P2PMQTT::getMsgPublish(byte* buffer, P2PMQTTpublish* publish) {
-  // update from the buffer
-  int index = 0; int aux = 0;
-  publish->fixedHeader = buffer[index++];
-  publish->length = buffer[index++];
-  publish->lengthTopicMSB = buffer[index++];
-  publish->lengthTopicLSB = buffer[index++];
-  aux = publish->lengthTopicMSB*256 + publish->lengthTopicLSB;
-  byte topic[aux];
-  for(int i = 0; i < aux; i++) topic[i] = buffer[index++];
-  publish->topic = topic;
-  aux = publish->length - publish->lengthTopicMSB*256 - publish->lengthTopicLSB - 2;
-  byte payload[aux];
-  for(int i = 0; i < aux; i++) payload[i] = buffer[index++];
-  publish->payload = payload;
+void P2PMQTT::debugB(byte* b, String msg) {
+	if (debug) {
+	  String s = msg + ": ";
+	  for (int i=0; i< sizeof(b); i++) {
+		s += String(b[i]) + ", ";  
+	  } 
+	Serial.println(s);	
+	}
 }
-*/
-
-/*
-  // Read the temperature sensor and convert to Kelvin.
-      int val = analogRead( sensorPin );
-
-      // Read the voltage.
-      float voltage = (val * 5.0) / 1024.0;
-
-      // Convert to Kelvin.
-      float tempCelcius = voltage * 100;
-      float tempKelvin = tempCelcius + 273.15;
-Serial.println("conv");
-
-      //byte * b = (byte *) &tempKelvin;
-      byte b[4];
-      b[0] = 0; b[1] = 0; b[2] = 0;
-      b[3] = count++;
-      count %= 255;
-      byte * topic = (byte *) "temp";
-      byte * separator = (byte *) " - ";
-MQTTpublish mqtt = {48, 12, 0, 4, topic, 0, 1, b};
-byte * c = (byte *) &mqtt;
-byte msg[] = {0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 };
-msg[0] = mqtt.fixedHeader;
-msg[1] = mqtt.length;
-msg[2] = mqtt.lengthTopicMSB;
-msg[3] = mqtt.lengthTopicLSB;
-msg[4] = mqtt.topic[0];
-msg[5] = mqtt.topic[1];
-msg[6] = mqtt.topic[2];
-msg[7] = mqtt.topic[3];
-msg[8] = mqtt.msgMSB;
-msg[9] = mqtt.msgLSB;
-msg[10] = mqtt.payload[0];
-msg[11] = mqtt.payload[1];
-msg[12] = mqtt.payload[2];
-msg[13] = mqtt.payload[3];
-aac.write(msg, 14);
-for (int i= 0; i<14; i++){ Serial.print(msg[i], DEC); Serial.print("\t"); }
-Serial.println();
-*/
-
