@@ -1,5 +1,5 @@
 package com.example.ocv34_t4;
-// Stand 7.4.20, BigBlack
+// Stand 17.4.20, BigBlack, camera.front
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -252,12 +252,12 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       } else { // also ocvMode
          plCmd = CMD_MOVE; // drive
          plT = 1;
-         plV = 3;
+         plV = 11;  // analog v 3
          String dirText;
          cmd = "FIND";
          switch (ocvDir) {
             case ACTION_LEFT:
-               plR = 10;
+               plR = 5;   // analog r -3
                dirText = "left";
                break;
             case ACTION_MIDDLE:
@@ -265,7 +265,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                dirText = "middle";
                break;
             case ACTION_RIGHT:
-               plR = 6;
+               plR = 11;  // analog r -3
                dirText = "right";
                break;
             default:
@@ -394,7 +394,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
       mOpenCvCameraView.setCvCameraViewListener(this);
       textView = findViewById(R.id.textView);
-//      mOpenCvCameraView.setCameraIndex(CameraBridgeViewBase.CAMERA_ID_FRONT);  // Handy
+      if (! isAVD) mOpenCvCameraView.setCameraIndex(CameraBridgeViewBase.CAMERA_ID_FRONT);  // Handy
       mOpenCvCameraView.enableView();
       picAnalyzeProcess = new PicAnalyzeProcess(mOpenCvCameraView, this, textView, mHandler2, x, y);
    }
