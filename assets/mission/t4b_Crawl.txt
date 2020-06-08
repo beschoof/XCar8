@@ -1,0 +1,30 @@
+# Mission CXar6 for Crawl, 4.6.2020
+# t4b: Wegmessung mit sensored brushless motor
+# Syntax zB: move, v3, r0, t10, s1, a 6
+# init t 101: Seben, t 102: Crawler
+# init mit s 120: rotations per meter
+# init : 128*r + v => init for gyro (Impulse per grad/sec)
+# find: fahre zu rotem Ball hin, Farbe durch x...y angegeben
+# zB <find v 3, t 30, x 110, y120> für blau. wenn y<x, gilt a..180 | 0..r
+# zB rot: <find v 3, t 30, x 165, y 13
+# anm.: bei find werden x und y nicht an arduino gegeben, daher keine Beschraenkung auf 7 bit
+# anm.: bei init kann s > 127 sein, da zum Arduino auf 7bit gemappt wird
+
+init, t 102, s 120, r 1, v 22
+wait, t 5
+#move, v 7, r -4, t 5
+find, v 3, t 30, x 25, y 35
+wait, t 4
+#move, v -3, r 4, t 5
+wait, t 5
+
+#move, v 2, r 3, t 5, a 36
+#move, v 3, r 0, t 2
+#move, v 2, r -3, t 5, a 36
+#move, v 3, r 0, t 2
+#wait, t 3
+#move, v -2, r -4, t 3
+#wait, t 3
+#move, v 2, r0, t 2, s 2
+#wait, t 3
+

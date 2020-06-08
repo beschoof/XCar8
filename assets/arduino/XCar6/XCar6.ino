@@ -1,7 +1,7 @@
 /*
-   Stand 15.04.20, 16:00, bigblack
+   Stand 08.06.20, 16:00, bigblack
    - XCar6
-   + LED-Anzeige
+   + Brushless Motor sensor
 
 !! Bilbliothek unter C:\dev\dev\arduino\libraries\MQTT_Lib !!!
 !! Please do not use Digital pin 7 as input or output because is used in the comunication with MAX3421E)
@@ -14,25 +14,7 @@
 //Pins
 #define motorPin    11  // YELLOW
 #define servoPin    10 // GREEN
-#define glsPin      2  // for die ISR
-
-#define ledDrivePin    30  // ist der erste
-#define ledStayPin     31
-#define ledForwardPin  32
-#define ledBackPin     33
-#define ledLeftPin     34
-#define ledRightPin    35
-#define ledStandby     36
-#define ledErr         37
-
-#define statDrive      1
-#define statStay       2
-#define statForward    4
-#define statBack       8
-#define statLeft      16
-#define statRight     32
-#define statStandby   64
-#define statErr      128
+#define interruptPin      2  // for die ISR
 
 // car type
 #define carTypeSeben  1
@@ -72,7 +54,7 @@ int b2sOld = 0;
 
 boolean doCountRots = false;
 int rots = 0;  // Umdrehungen je Kommando, wenn plS=1
-volatile bool glsVal = false;  // ISR2
+volatile bool sensorVal = false;  // ISR2
 int rpm = 0; // rotations per meter, wird als init-Parameter plS mitgegeben
 int rotMax = 0;
 
@@ -99,8 +81,6 @@ P2PMQTTpublish pub;
 
 void setup() {
   Serial.begin(9600);
-  ledInit();
-  showStat(statStandby);
   Serial.println("init...");
   lenkungServo.attach(servoPin);
   motorServo.attach(motorPin);
@@ -114,7 +94,7 @@ void setup() {
        logge (" ### init connected failure");
   }
 
-  attachInterrupt(digitalPinToInterrupt(glsPin), ISR2, RISING);
+  attachInterrupt(digitalPinToInterrupt(interruptPin), ISR2, RISING);
 
   Wire.begin();
   Wire.beginTransmission(MPU_addr);
@@ -136,9 +116,9 @@ void loop() {
 
   // Umdrehung GLS count?
   if (doCountRots) {
-    if (glsVal == true) {
+    if (sensorVal == true) {
       rots++;
-      glsVal = false;
+      sensorVal = false;
     }
   }
 
@@ -270,7 +250,6 @@ loopEnd:
 } // end loop
 
 void doMove() {
-   int myStat = statDrive;
    int v0 = 0;
    if (carType == carTypeSeben) {
      v0 = plV;     // 1..15
@@ -286,30 +265,24 @@ void doMove() {
          delay(100);
          motorServo.write(90);
          delay(100);
-         myStat += statBack;
        }
      } else {
        backw = false;
-       myStat += statForward;
      }
    } else { // crawl
      v0 = 16 - plV;
      motorServoVal = map(v0, 1, 15, 20, 160);  // Startwert
-     myStat = (motorServoVal < 8) ? myStat +=statBack : myStat +=statForward;
    }
    motorServo.write(motorServoVal);
 
    int r0 = plR;
    if (r0 == 0) r0 = 8;
-   myStat = (r0 < 8) ? myStat +=statLeft : myStat +=statRight;
    int lenkungServoVal = map(r0, 1, 15, 20, 160);
    lenkungServo.write(lenkungServoVal); // brumm brumm....
-   showStat(myStat);
    logge(" +++ MOVE mit v/r: " + String(motorServoVal) + " / " + String(lenkungServoVal) + " :: " + String(plV) + " / " + String(plR));
 } // doMove()
 
 void doWait () {
-  showStat(statStay);
   logge(" + + + Stay + + + ");
   lenkungServo.write(90);
   motorServoVal = 90;
@@ -340,7 +313,6 @@ void doPublish(int rc, byte* val)  {  //  wir sind rum
     doCountRots = false;
     rots = 0;
   } else {
-    showStat(statErr);
     logge(" ??? reached but not conn+subsr ??? id/rc:" + String(plId) + " / " + String(rc));
   }
 }
@@ -353,7 +325,6 @@ void doPublish0(int rc, byte val)  {
 
 ///////////////////////////////////// TOOLS
 void cancel(String msg, byte rcVal) {
-  showStat(statErr);
   logge(msg);
   doWait();
   doPublish(rcCancel, rcVal);
@@ -382,7 +353,7 @@ int sign(long x) {
 }
 
 void ISR2() {
-  glsVal = true;
+  sensorVal = true;
 }
 
 int getGyroDips() {
@@ -405,22 +376,4 @@ int getGyroDips() {
   Serial.print(" | GyZ = "); Serial.print(GyZ);  Serial.print(" | p = "); Serial.println(gyP);
   gyT = millis();
   return gyP;
-}
-
-void showStat(int n) {
-    for (int i = 0; i<7; i++) {
-        digitalWrite(ledDrivePin + i, LOW);
-    }
-    for (int i = 0; i<7; i++) {
-        int k = 1 << i;
-        if ( (n & k) == k) {
-            digitalWrite(ledDrivePin + i, HIGH);
-        }
-    }
-}
-
-void ledInit() {
-  for (int i=0; i<8; i++) {
-    pinMode(ledDrivePin + i, OUTPUT);
-  }
 }
