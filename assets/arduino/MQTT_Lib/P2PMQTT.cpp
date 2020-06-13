@@ -1,6 +1,6 @@
 /*
  * P2PMQTT protocol implementation for Arduino
- * 15.04.2020: byte* -> byte[n]
+ * 13.06.2020: byte* -> byte[n]
  */
 
 #include "P2PMQTT.h"
@@ -92,45 +92,31 @@ bool P2PMQTT::checkTopic(byte* buffer, int type, char* topic) {
   byte bufData[8];
   bool result = false;
   int tLen = 0;
-
-  switch(type) {
-    case SUBSCRIBE:
-	  int tLen = buffer[5];
-      for(int i = 0; i < min(8, tLen); i++) {
-         bufData[i] = buffer[6+i];
-         }
-	  result = P2PMQTT::cmpStr(bufData, topic, tLen);	 
-      if(result) Serial.println("P2PMQTT::checkTopic ok"); 
-	        else debugB(bufData, "P2PMQTT::checkTopic false: " + (String)topic);
-      break;
-    default:
-      break;
-  }
+  tLen = buffer[5];
+  for(int i = 0; i < min(8, tLen); i++) {
+     bufData[i] = buffer[6+i];
+     }
+  result = P2PMQTT::cmpStr(bufData, topic, tLen);
+  if(result) Serial.println("P2PMQTT::checkTopic ok");
+    else debugB(bufData, "P2PMQTT::checkTopic false: " + (String)topic);
   return result;
 }
 
 // packs the Payload as a byte array
 byte* P2PMQTT::getPayload(byte* buffer, int type) {
+    int bufLen = 0,  topicLen = 0,  payloadLen = 0;
 	if(debug) {
 		Serial.println("P2PMQTT::getPayload, buffer vor getPayload:");
 		for(int m = 0; m < 14; m++) { Serial.print(buffer[m], HEX); Serial.print(" "); }; Serial.println();
     }	
-//  byte * bufDataOut;
-//  bufDataOut = new byte[16];
-	  static byte bufDataOut[160];
-  switch(type) {
-    case PUBLISH:
-	  int bufLen = buffer [1];
-	  int topicLen = buffer[3];
-	  int payloadLen = bufLen - topicLen - 2;
+    static byte bufDataOut[160];
+	  bufLen = buffer [1];
+	  topicLen = buffer[3];
+	  payloadLen = bufLen - topicLen - 2;
 	  for(int i=0; i < payloadLen; i++) {
 		  bufDataOut[i] = buffer[i + 6];
 	  }
-      break;
-    default:
-      break;
-  }
-  return bufDataOut;
+      return bufDataOut;
 }
 
 // read next message in the buffer

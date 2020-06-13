@@ -149,7 +149,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
    //////////////   click methods
    public void cmdTrace(View v) {
-      startOcvMode((byte)0, 51, 70);
+      startOcvMode((byte)0, 25, 35);
    }
 
    public void cmdForward(View v) {   // wird nur einmal gedrückt, arbeitet die gesamte Mission ab

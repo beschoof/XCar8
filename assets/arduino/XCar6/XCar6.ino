@@ -1,5 +1,5 @@
 /*
-   Stand 08.06.20, 16:00, bigblack
+   Stand 13.06.20, bigblack
    - XCar6
    + Brushless Motor sensor
 
@@ -33,12 +33,12 @@ byte carType = 0;
 #define cmdStop  9
 
 // MQTT
-#define MQTT_TOPIC "AN"
 byte* payload;  // def aus switch rausnemhemen, wegen crossing initialisation
 
 // Kommandos
 int plId, plCmd, plT, plR, plV, plS, plA; // Payload, kommt von ganz oben, Zeit, Kurvenradius, Geschw., Umdrehungsmessung, Winkel
 int oldId = -1;
+char MQTT_TOPIC[] = "AN";
 String lastMsg = "";                   // println
 int lastGetType = 0;
 boolean backw = false;
@@ -134,6 +134,9 @@ void loop() {
      break;
 
   case SUBSCRIBE:  // die da oben deuten an, dass sie sich interessieren
+//  char* myTopic = char[2];
+ // MQTT_TOPIC.toCharArray(myTopic, 2);
+  
     subscribed = mqtt.checkTopic(mqtt.buffer, type, MQTT_TOPIC);  // der Form halber... check "AN"
     if (subscribed) {
       logge (" getType: subscribed");
@@ -229,7 +232,8 @@ void loop() {
 
 loopEnd:
     if (iAmActive && (plT > 0) && (millis() - tStart > duration) ) {  // Zeit abgelaufen ?
-      logge("CMD done in time ...");
+      String s = (doCountRots) ? String(rots) : ";";
+      logge("CMD done in time ..." + s);
       doPublish0(rcOk, 0);
       // sende OK ans Android, und warte auf neues Kommando.
     }
@@ -327,7 +331,7 @@ void doPublish0(int rc, byte val)  {
 void cancel(String msg, byte rcVal) {
   logge(msg);
   doWait();
-  doPublish(rcCancel, rcVal);
+  doPublish0(rcCancel, rcVal);
   missionFinish = true;
 }
 
