@@ -1,6 +1,6 @@
 /*
    Stand 13.06.20, bigblack
-   - XCar6
+   - XCar7
    + Brushless Motor sensor
 
 !! Bilbliothek unter C:\dev\dev\arduino\libraries\MQTT_Lib !!!

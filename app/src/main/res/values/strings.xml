@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">ocv34_t4</string>
+    <string name="app_name">xcar7</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">ocv34_t4</string>
+    <string name="title_activity_main">xcar7</string>
     <string name="trace">trace</string>
     <string name="stop">stop</string>
     <string name="forward">forward</string>

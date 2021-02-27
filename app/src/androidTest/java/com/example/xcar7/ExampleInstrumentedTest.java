@@ -1,4 +1,4 @@
-package com.example.ocv34_t4;
+package com.example.xcar7;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
       // Context of the app under test.
       Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-      assertEquals("com.example.ocv34_t4", appContext.getPackageName());
+      assertEquals("com.example.xcar7", appContext.getPackageName());
    }
 }

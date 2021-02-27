@@ -1,8 +1,6 @@
-ocv34_t4b:
+xcar7,  analog ocv34_t4:
 4.6.2020
 - sensored brushless motor -> Wegstrecke mit Sensor ermitteln (Crawler)
-
-
 - Kontur-Erkennung analog MrWiley
 - in Mission als CMD: FIND
 - funktioniert mit WikoFreddy (Android 6)

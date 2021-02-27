@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ocv34_t4">
+    package="com.example.xcar7">
 
     <supports-screens
         android:anyDensity="true"

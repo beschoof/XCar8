@@ -1,4 +1,4 @@
-package com.example.ocv34_t4;
+package com.example.xcar7;
 // Stand 17.4.20, BigBlack, camera.front
 
 import android.content.BroadcastReceiver;
@@ -22,9 +22,9 @@ import android.app.Activity;
 
 import com.example.mqttlib.UsbConnection12;
 import com.example.mqttlib.WroxAccessory;
-import com.example.ocv34_t4.mission.Mission;
-import com.example.ocv34_t4.mission.MissionStep;
-import com.example.ocv34_t4.mission.MissionUtils;
+import com.example.xcar7.mission.Mission;
+import com.example.xcar7.mission.MissionStep;
+import com.example.xcar7.mission.MissionUtils;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;

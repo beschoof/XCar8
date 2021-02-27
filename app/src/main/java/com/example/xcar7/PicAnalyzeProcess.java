@@ -1,8 +1,6 @@
-package com.example.ocv34_t4;
+package com.example.xcar7;
 // stnd7.4.20, laptop
 
-import android.app.Activity;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
@@ -11,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
