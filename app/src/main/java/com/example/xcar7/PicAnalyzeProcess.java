@@ -46,8 +46,8 @@ class PicAnalyzeProcess {
 
    void run(Mat cameraPic) {
       Log.i(TAG, "PicAnalyzeProcess started");
-         Mat img_result = processPic(cameraPic);
-         Log.w(TAG, "Img_result: " + d2Str(direction));
+      Mat img_result = processPic(cameraPic);
+      Log.w(TAG, "Img_result: " + d2Str(direction));
    }
 
    void setCameraPic(Mat pic) {
@@ -114,21 +114,21 @@ class PicAnalyzeProcess {
             mHandler.obtainMessage(MainActivity.ACTION_LEFT).sendToTarget();
          }
       } else {
-         mHandler.obtainMessage(MainActivity.ACTION_STOP).sendToTarget();
+         // mHandler.obtainMessage(MainActivity.ACTION_STOP).sendToTarget();
       }
       Log.i(TAG, " quit run()");
       return returnPic;
-      }
+   }
 
-private String d2Str(int d) {
-         String r = "+++";
-         switch (d) {
-            case -1: r = "NIX DA"; break;
-            case 0: r = "???"; break;
-            case 1: r = "<< LINKS"; break;
-            case 2: r = "<< Mitte >>"; break;
-            case 3: r = "RECHTS >>"; break;
-         }
-         return r;
+   private String d2Str(int d) {
+      String r = "+++";
+      switch (d) {
+         case -1: r = "NIX DA"; break;
+         case 0: r = "???"; break;
+         case 1: r = "<< LINKS"; break;
+         case 2: r = "<< Mitte >>"; break;
+         case 3: r = "RECHTS >>"; break;
       }
+      return r;
+   }
 }

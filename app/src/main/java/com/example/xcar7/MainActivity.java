@@ -1,5 +1,5 @@
 package com.example.xcar7;
-// Stand 17.4.20, BigBlack, camera.front
+// Stand 24.9.23,
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -69,12 +69,12 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
    EditText missionFileName;
    Mission myMission = null;
    //   String sFileName1 = "/mnt/sdcard/misc/X2_Seben.txt";  // Handy
-   String sFileName1 = Environment.getExternalStorageDirectory().getPath() + "/misc/t4_Crawl.txt";  // Handy
+   String sFileName1 = Environment.getExternalStorageDirectory().getPath() + "/misc/XCar7.txt";  // Handy
    //   String sFileName1 = "/mnt/sdcard2/misc/X1_Crawl.txt";   // Tablet
 
    final String handyModel = Build.MODEL + " / " + Build.HARDWARE + " / " +
          Build.TYPE + " / " + Build.PRODUCT + " / " + Build.BRAND + " / " + Build.DEVICE;
-//   Android SDK built for x86 / ranchu / userdebug / sdk_google_phone_x86 / Android / generic_x86
+   //   Android SDK built for x86 / ranchu / userdebug / sdk_google_phone_x86 / Android / generic_x86
 //   AOSP on IA Emulator / ranchu / user / sdk_gphone_x86_arm / google / generic_x86_arm
 //   U FEEL LITE / mt6735 / user / P4601AN / WIKO / P4601AN
 //   GT-I9100 / smdk4210 / user / GT-I9100 / Samsung / GT-I9100
@@ -85,6 +85,9 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
    protected static final byte ACTION_LEFT = 1;
    protected static final byte ACTION_MIDDLE = 2;
    protected static final byte ACTION_RIGHT = 3;
+   protected static final String[] dirWord = {"###", "left", "middle", "right"};
+   protected static final String[] dirLog = {"###", "<<<<<<<<", "--------", ">>>>>>>>"};
+   protected static final byte dirR[] = {0, 12, 8, 2};
    int oldDir = 0;
    final static int CMD_INIT = 1;
    final static int CMD_MOVE = 2;
@@ -97,15 +100,15 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       try {
          super.onCreate(savedInstanceState);
          textToSpeech = new TextToSpeech(
-            getApplicationContext(),
-            new TextToSpeech.OnInitListener() {
-               @Override
-               public void onInit(int status) {
-                  if (status != TextToSpeech.ERROR) {
-                     textToSpeech.setLanguage(Locale.UK);
+               getApplicationContext(),
+               new TextToSpeech.OnInitListener() {
+                  @Override
+                  public void onInit(int status) {
+                     if (status != TextToSpeech.ERROR) {
+                        textToSpeech.setLanguage(Locale.UK);
+                     }
                   }
-               }
-            });
+               });
          setContentView(R.layout.activity_menu);
          myLog = (TextView) findViewById(R.id.logText1);
          tools = new Tools(myLog, textToSpeech);
@@ -149,7 +152,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
    //////////////   click methods
    public void cmdTrace(View v) {
-      startOcvMode((byte)0, 25, 35);
+      startOcvMode((byte)0, 170, 180);
    }
 
    public void cmdForward(View v) {   // wird nur einmal gedrückt, arbeitet die gesamte Mission ab
@@ -273,7 +276,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                dirText = "wrong";
          }
          if (oldDir != ocvDir) {
-            speakText("go " + dirText);
+            speakText("move to " + dirText);
             oldDir = ocvDir;
          }
 
@@ -396,7 +399,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       textView = findViewById(R.id.textView);
       if (! isAVD) mOpenCvCameraView.setCameraIndex(CameraBridgeViewBase.CAMERA_ID_FRONT);  // Handy
       mOpenCvCameraView.enableView();
-      picAnalyzeProcess = new PicAnalyzeProcess(mOpenCvCameraView, this, textView, mHandler2, x, y);
+      picAnalyzeProcess = new PicAnalyzeProcess(mOpenCvCameraView, this, textView, mHandler, x, y);
    }
 
    private void stopOcvMode() {
@@ -458,46 +461,22 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       @Override
       public void handleMessage(Message msg) {
          byte plCmd = CMD_MOVE; // drive (ggf. auch mit v=0)
-         byte plT = 0;  // time
+         byte plT = 0;  // time   ??muss > 0 sein, damit vom Arduino ein neues CMD angefordert wird
          byte plV = 3;  // geschw
          byte plR = 0;  // radius, 8:: geradeaus
          byte plS = 0;  // weg
          byte plA = 0;  // Winkel
-         int  newDir = 0; // 1..3
-         switch (msg.what) {
-            case ACTION_LEFT:
-               plR = 10;  // radius
-               newDir = 1;
-               if (oldDir != newDir) {
-                  speakText("go left");
-                  oldDir = newDir;
-               }
-               Log.i(logTAG, "< < < < < < < < < < < < ");
-               break;
-            case ACTION_MIDDLE:
-               plR = 8;
-               newDir = 2;
-               if (oldDir != newDir) {
-                  speakText("go middle");
-                  oldDir = newDir;
-               }
-               Log.i(logTAG, "- - - - - - - - - - - - ");
-               break;
-            case ACTION_RIGHT:
-               plR = 6;  // radius
-               newDir = 3;
-               if (oldDir != newDir) {
-                  speakText("go right");
-                  oldDir = newDir;
-               }
-               Log.i(logTAG, "> > > > > > > > > > > > ");
-               break;
-            case ACTION_STOP:
-//               doStop();
-//               speakText("go stop");
-               break;
+         if (msg.what > 0) {
+            int newDir = msg.what; // 1..3
+            if (oldDir != newDir) {
+               Log.i(logTAG, dirLog[newDir]);
+               plR = dirR[newDir];
+               oldDir = newDir;
+               speakText(dirWord[newDir]);
+               sendToCar (plCmd,plT,plR,plV,plS,plA, "findByHandler: " + plR);
+            }
          }
-         sendToCar (plCmd,plT,plR,plV,plS,plA, "FIND");
+
       }
    };
 
