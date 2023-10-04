@@ -1,5 +1,5 @@
 package com.example.xcar7;
-// stnd7.4.20, laptop
+// stnd 1.10.23, laptop
 
 import android.os.Handler;
 import android.util.Log;
