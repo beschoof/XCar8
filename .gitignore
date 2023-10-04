@@ -16,3 +16,4 @@
 # Project exclude paths
 /sdk/build/
 /sdk/build/intermediates/javac/debug/classes/
+/ocv34/
