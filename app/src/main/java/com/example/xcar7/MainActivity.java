@@ -1,5 +1,5 @@
 package com.example.xcar7;
-// Stand 24.9.23,
+// Stand 1.10.2023
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
