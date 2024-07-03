@@ -10,6 +10,8 @@ import android.hardware.usb.UsbManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.speech.tts.TextToSpeech;
 import android.text.method.ScrollingMovementMethod;
@@ -432,13 +434,21 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       if (duration > 0) {
          t1 = SystemClock.uptimeMillis();
          if (t1 - t0 > duration) {
-//            tHandler.obtainMessage(1).sendToTarget();
-            stopOcvMode();
             speakText("trace mode time over");
+            tHandler.obtainMessage(1).sendToTarget();
          }
       }
       return cameraPic;
    }
+
+   private  Handler tHandler = new Handler(){
+      @Override
+      public void handleMessage(Message msg) {
+         if (msg.what == 1) {
+            stopOcvMode();
+         }
+      }
+   };
 
    void moveDir(int dir) {
       byte plCmd = CMD_MOVE; // drive (ggf. auch mit v=0)
