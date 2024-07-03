@@ -38,6 +38,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainActivity extends Activity implements CvCameraViewListener2 {
    private static final String logTAG = "### XCar8: ";
@@ -85,10 +86,10 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
    protected static final byte ACTION_MIDDLE = 2;
    protected static final byte ACTION_RIGHT = 3;
    int oldDir = 0;
-   final static int CMD_INIT = 1;
-   final static int CMD_MOVE = 2;
-   final static int CMD_WAIT = 3;
-   final static int CMD_STOP = 9;
+   final static byte CMD_INIT = 1;
+   final static byte CMD_MOVE = 2;
+   final static byte CMD_WAIT = 3;
+   final static byte CMD_STOP = 9;
 
 
    @Override
@@ -103,11 +104,11 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                   }
                });
          setContentView(R.layout.activity_menu);
-         myLog = (TextView) findViewById(R.id.logText1);
+         myLog = findViewById(R.id.logText1);
          tools = new Tools(myLog, textToSpeech);
          myLog.setMovementMethod(new ScrollingMovementMethod());
          tools.logge(logTAG, "onCreate beginn");
-         missionFileName = (EditText) findViewById(R.id.MissionFileName);
+         missionFileName = findViewById(R.id.MissionFileName);
          missionFileName.setText(sFileName1);
          UsbManager mUsbManager = (UsbManager) getSystemService(USB_SERVICE);
          connection = new UsbConnection12(this, mUsbManager);
@@ -170,7 +171,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
    // wird bei cmdForward angestoßen, und vom BroadcastReceiver
    void runMissionStep() {
-      byte plCmd = 0; // drive (ggf. auch mit v=0)
+      byte plCmd; // drive (ggf. auch mit v=0)
       byte plT = 0;  // time
       byte plR = 0;  // radius
       byte plV = 0;  // geschw
@@ -319,7 +320,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       @Override
       public void onReceive(Context context, Intent intent) {
          try {
-            if (!intent.getAction().equalsIgnoreCase(subscription)) {  //"com.wiley.wroxaccessories.SUBSCRIBE.AN"
+            if (!Objects.requireNonNull(intent.getAction()).equalsIgnoreCase(subscription)) {  //"com.wiley.wroxaccessories.SUBSCRIBE.AN"
                tools.logge(logTAG, "onReceive mit falscher Subscription. intent.getAction== " + intent.getAction());
                return;
             }
@@ -385,7 +386,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       ocvMode = true;
       speakText("trace mode started");
       setContentView(R.layout.activity_camera);
-      mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.t4Camera_view);
+      mOpenCvCameraView = findViewById(R.id.t4Camera_view);
       mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
       mOpenCvCameraView.setCvCameraViewListener(this);
       textView = findViewById(R.id.textView);
@@ -451,13 +452,12 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
    };
 
    void moveDir(int dir) {
-      byte plCmd = CMD_MOVE; // drive (ggf. auch mit v=0)
       byte plT = 0;  // time
       byte plV = 3;  // geschw
       byte plR = 0;  // radius, 8:: geradeaus
       byte plS = 0;  // weg
       byte plA = 0;  // Winkel
-      int newDir = 0; // 1..3
+      int newDir; // 1..3
       switch (dir) {
          case ACTION_LEFT:
             plR = 10;  // radius
@@ -497,7 +497,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             Log.i(logTAG, "- - - L O O K - - ");
             break;
       }
-      sendToCar(plCmd, plT, plR, plV, plS, plA, "FIND");
+      sendToCar(CMD_MOVE, plT, plR, plV, plS, plA, "FIND");
    }
 
 }
