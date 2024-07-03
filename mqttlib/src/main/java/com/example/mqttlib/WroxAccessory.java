@@ -1,6 +1,4 @@
 package com.example.mqttlib;
-
-
       import java.io.IOException;
       import java.util.ArrayList;
 

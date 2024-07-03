@@ -1,2 +1,2 @@
-include ':app', ':sdk', ':mqttlib'
-rootProject.name='xcar7'
+include ':app', ':ocv34', ':mqttlib'
+rootProject.name='xcar8'
