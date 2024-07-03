@@ -1,6 +1,6 @@
 package com.example.xcar8;
-// Stand 12.9.23, BigBlack, camera.front, korr: 3.7.24
-// error bei stopOcvMode()
+// Stand 12.9.23, BigBlack, camera.front, korr: 3.7.24 b
+// error bei stopOcvMode() -> Handler
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
