@@ -1,6 +1,5 @@
 package com.example.xcar8;
-// Stand 12.9.23, BigBlack, camera.front, korr: 3.7.24 b
-// error bei stopOcvMode() -> Handler
+// Stand 23.7.24
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -53,7 +52,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
    private PicAnalyzeProcess picAnalyzeProcess;
    boolean ocvMode = false;
-   int ocvDir = 0;
 
    long duration;
    long t0, t1 = SystemClock.uptimeMillis();
@@ -179,99 +177,70 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       byte plA = 0;  // Winkel
       String cmd;
 
-      if (!ocvMode) {
 
-         MissionStep m = myMission.getNextStep();
-         if (m == null) {
-            tools.logge(logTAG, "run Step = null");
+      MissionStep m = myMission.getNextStep();
+      if (m == null) {
+         tools.logge(logTAG, "run Step = null");
+         doStop();
+         return;
+      }
+      ocvMode = false;
+      tools.logge(logTAG, "run step: " + myMission.getLine() + ": " + m);
+      speakText("run step " + m.getCmd());
+
+      cmd = m.getCmd();
+
+      int x = 0, y = 0; // farbenbereich
+
+      for (int i = 0; i < m.getParamKeys().length; i++) {
+         String pKey = m.getParamKeys()[i];
+         int iVal = m.getParamVals()[i];
+         switch (pKey) {
+            case "T":  // bei >= 100 -> millis, sonst sek.
+               plT = (byte) iVal;
+               break;
+            case "R":
+               plR = (byte) (iVal + 8); // -7..7 -> 1..15  , keine 0
+               break;
+            case "V":
+               plV = (byte) (iVal + 8); // -7..7 -> 1..15  , keine 0
+               break;
+            case "S":
+               plS = (byte) iVal;
+               break;
+            case "A":
+               plA = (byte) iVal;
+               break;
+            case "X":
+               x = iVal;
+               break;
+            case "Y":
+               y = iVal;
+               break;
+         }
+      }
+
+      switch (cmd) {
+         case "INIT":  // == Init für car type
+            plCmd = CMD_INIT;
+            tools.logge(logTAG, "init: " + plT);
+            break;
+         case "WAIT":  // == MOVE mit v=0
+            plCmd = CMD_WAIT;
+            tools.logge(logTAG, "wait: " + plT);
+            break;
+         case "MOVE":
+            plCmd = CMD_MOVE; // drive
+            tools.logge(logTAG, "move");
+            break;
+         case "FIND":
+            tools.logge(logTAG, "find");
+            startOcvMode(plT, x, y);   // siehe unten
+            return;
+         default:
+            tools.logge(logTAG, "Error bei runMissionStep::Unbekanntes Kommando: " + cmd);
             doStop();
             return;
-         }
-         ocvMode = false;
-         tools.logge(logTAG, "run step: " + myMission.getLine() + ": " + m);
-         speakText("run step " + m.getCmd());
-
-         cmd = m.getCmd();
-
-         int x = 0, y = 0; // farbenbereich
-
-         for (int i = 0; i < m.getParamKeys().length; i++) {
-            String pKey = m.getParamKeys()[i];
-            int iVal = m.getParamVals()[i];
-            switch (pKey) {
-               case "T":  // bei >= 100 -> millis, sonst sek.
-                  plT = (byte) iVal;
-                  break;
-               case "R":
-                  plR = (byte) (iVal + 8); // -7..7 -> 1..15  , keine 0
-                  break;
-               case "V":
-                  plV = (byte) (iVal + 8); // -7..7 -> 1..15  , keine 0
-                  break;
-               case "S":
-                  plS = (byte) iVal;
-                  break;
-               case "A":
-                  plA = (byte) iVal;
-                  break;
-               case "X":
-                  x = iVal;
-                  break;
-               case "Y":
-                  y = iVal;
-                  break;
-            }
-         }
-
-         switch (cmd) {
-            case "INIT":  // == Init für car type
-               plCmd = CMD_INIT;
-               tools.logge(logTAG, "init: " + plT);
-               break;
-            case "WAIT":  // == MOVE mit v=0
-               plCmd = CMD_WAIT;
-               tools.logge(logTAG, "wait: " + plT);
-               break;
-            case "MOVE":
-               plCmd = CMD_MOVE; // drive
-               tools.logge(logTAG, "move");
-               break;
-            case "FIND":
-               tools.logge(logTAG, "find");
-               startOcvMode(plT, x, y);   // siehe unten
-               return;
-            default:
-               tools.logge(logTAG, "Error bei runMissionStep::Unbekanntes Kommando: " + cmd);
-               doStop();
-               return;
-         }
-      } else { // also ocvMode
-         plCmd = CMD_MOVE; // drive
-         plT = 1;
-         plV = 11;  // analog v 3
-         String dirText;
-         cmd = "FIND";
-         switch (ocvDir) {
-            case ACTION_LEFT:
-               plR = 5;   // analog r -3
-               dirText = "left";
-               break;
-            case ACTION_MIDDLE:
-               plR = 8;
-               dirText = "middle";
-               break;
-            case ACTION_RIGHT:
-               plR = 11;  // analog r -3
-               dirText = "right";
-               break;
-            default:
-               dirText = "wrong";
-         }
-         if (oldDir != ocvDir) {
-            speakText("go " + dirText);
-            oldDir = ocvDir;
-         }
-
       }
       sendToCar(plCmd, plT, plR, plV, plS, plA, cmd);
    }
