@@ -37,7 +37,7 @@ public class WroxAccessory {
    public String subscribe(BroadcastReceiver receiver, String topic, int id) throws IOException {
       new WriteHelper().execute(MQTT.subscribe(id, topic, MQTT.AT_MOST_ONCE));
       this.receiver = receiver; // Register receiver
-      String sub = WroxAccessory.SUBSCRIBE + "." + topic;  // "com.wiley.wroxaccessories.SUBSCRIBE.AN"
+      String sub = this.SUBSCRIBE + "." + topic;  // "com.wiley.wroxaccessories.SUBSCRIBE.AN"
       IntentFilter filter = new IntentFilter();
       filter.addAction(sub);
       mContext.registerReceiver(receiver, filter);

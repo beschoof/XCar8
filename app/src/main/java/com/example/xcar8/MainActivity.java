@@ -1,5 +1,5 @@
 package com.example.xcar8;
-// Stand 23.7.24
+// Stand 23.7.24 B
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -369,7 +369,13 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       mOpenCvCameraView.setVisibility(SurfaceView.INVISIBLE);
       mOpenCvCameraView.disableView();
       setContentView(R.layout.activity_menu);
-      runMissionStep();
+      byte[] payload = {plCmdId, 1, 0};  // id, ok, 0
+      Intent publishIntent = new Intent();
+      publishIntent.setAction(mAccessory.SUBSCRIBE + "." + MQTT_TOPIC);
+      publishIntent.putExtra(mAccessory.SUBSCRIBE + "." + MQTT_TOPIC + ".topic", "AN");  //"com.wiley.wroxaccessories.SUBSCRIBE.AN"
+      publishIntent.putExtra(mAccessory.SUBSCRIBE + "." + MQTT_TOPIC + ".payload", payload);
+      this.sendBroadcast(publishIntent);
+
    }
 
    private final BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
