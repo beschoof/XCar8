@@ -1,5 +1,5 @@
 package com.example.xcar8;
-// Stand 23.7.24 B
+// Stand 25.7.24
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -83,12 +83,12 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
    protected static final byte ACTION_LEFT = 1;
    protected static final byte ACTION_MIDDLE = 2;
    protected static final byte ACTION_RIGHT = 3;
-   int oldDir = 0;
    final static byte CMD_INIT = 1;
    final static byte CMD_MOVE = 2;
    final static byte CMD_WAIT = 3;
    final static byte CMD_STOP = 9;
-
+   final static byte b0 = 0;
+   static int oldDir = 0;
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
@@ -271,11 +271,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
    void doStop() {
       try {
-         byte[] buffer = new byte[2];
-         buffer[0] = ++plCmdId;
-         buffer[1] = CMD_STOP;
          tools.logge(logTAG, "STOP");
-         mAccessory.publish(MQTT_TOPIC, buffer);
+         sendToCar(CMD_STOP, b0, b0, b0, b0, b0, "STOP");
          mAccessory.disconnect();
          speakText("do stop and out");
       } catch (IOException e) {
@@ -371,9 +368,9 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       setContentView(R.layout.activity_menu);
       byte[] payload = {plCmdId, 1, 0};  // id, ok, 0
       Intent publishIntent = new Intent();
-      publishIntent.setAction(mAccessory.SUBSCRIBE + "." + MQTT_TOPIC);
-      publishIntent.putExtra(mAccessory.SUBSCRIBE + "." + MQTT_TOPIC + ".topic", "AN");  //"com.wiley.wroxaccessories.SUBSCRIBE.AN"
-      publishIntent.putExtra(mAccessory.SUBSCRIBE + "." + MQTT_TOPIC + ".payload", payload);
+      publishIntent.setAction(WroxAccessory.SUBSCRIBE + "." + MQTT_TOPIC);
+      publishIntent.putExtra(WroxAccessory.SUBSCRIBE + "." + MQTT_TOPIC + ".topic", "AN");  //"com.wiley.wroxaccessories.SUBSCRIBE.AN"
+      publishIntent.putExtra(WroxAccessory.SUBSCRIBE + "." + MQTT_TOPIC + ".payload", payload);
       this.sendBroadcast(publishIntent);
 
    }
@@ -432,7 +429,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       byte plR = 0;  // radius, 8:: geradeaus
       byte plS = 0;  // weg
       byte plA = 0;  // Winkel
-      int newDir; // 1..3
+      int newDir = 0; // 1..3
       switch (dir) {
          case ACTION_LEFT:
             plR = 10;  // radius
@@ -440,8 +437,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             if (oldDir != newDir) {
                speakText("go left");
                oldDir = newDir;
+               Log.i(logTAG, "< < < < < < < < < < < < ");
             }
-            Log.i(logTAG, "< < < < < < < < < < < < ");
             break;
          case ACTION_MIDDLE:
             plR = 8;
@@ -449,8 +446,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             if (oldDir != newDir) {
                speakText("go middle");
                oldDir = newDir;
+               Log.i(logTAG, "- - - - - - - - - - - - ");
             }
-            Log.i(logTAG, "- - - - - - - - - - - - ");
             break;
          case ACTION_RIGHT:
             plR = 6;  // radius
@@ -458,8 +455,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             if (oldDir != newDir) {
                speakText("go right");
                oldDir = newDir;
+               Log.i(logTAG, "> > > > > > > > > > > > ");
             }
-            Log.i(logTAG, "> > > > > > > > > > > > ");
             break;
          case ACTION_STOP:
             plV = 1;
@@ -468,11 +465,13 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             if (oldDir != newDir) {
                speakText("searching");
                oldDir = newDir;
+               Log.i(logTAG, "- - - L O O K - - ");
             }
-            Log.i(logTAG, "- - - L O O K - - ");
             break;
       }
-      sendToCar(CMD_MOVE, plT, plR, plV, plS, plA, "FIND");
+      if (oldDir != newDir) {
+         sendToCar(CMD_MOVE, plT, plR, plV, plS, plA, "FIND");
+      }
    }
 
 }

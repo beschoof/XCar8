@@ -1,5 +1,5 @@
 /*
-1.9.2023
+24.7.24
 SKYRC: ESC-5V an Vin
 !! Bilbliothek unter C:\dev\dev\arduino\libraries\MQTT_Lib 
 !! Please do not use Digital pin 7 as input or output because is used in the comunication with MAX3421E)
@@ -227,7 +227,7 @@ void loop() {
   } // switch mqtt.type
 
 loopEnd:
-    if (iAmActive && (plT > 0) && (millis() - tStart > duration) ) {  // Zeit abgelaufen ?
+    if (iAmActive && ( (plT == 0) || (millis() - tStart > duration) )) {  // Zeit abgelaufen ?
       String s = (doCountRots) ? String(rots) : ";";
       logge("CMD done in time", rots);
       doPublish0(rcOk, 0);
