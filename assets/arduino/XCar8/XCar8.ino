@@ -1,5 +1,5 @@
 /*
-24.7.24
+30.7.24
 SKYRC: ESC-5V an Vin
 !! Bilbliothek unter C:\dev\dev\arduino\libraries\MQTT_Lib 
 !! Please do not use Digital pin 7 as input or output because is used in the comunication with MAX3421E)

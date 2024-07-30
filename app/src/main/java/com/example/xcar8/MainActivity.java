@@ -1,5 +1,5 @@
 package com.example.xcar8;
-// Stand 25.7.24
+// Stand 30.7.24
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -342,7 +342,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
 
    public static void speakText(String tts) {
-      textToSpeech.speak(tts, TextToSpeech.QUEUE_ADD, null);
+      // textToSpeech.speak(tts, TextToSpeech.QUEUE_ADD, null, "xxx");
    }
 
    /////////////////////   Camera + OpenCV
@@ -436,7 +436,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             newDir = 1;
             if (oldDir != newDir) {
                speakText("go left");
-               oldDir = newDir;
                Log.i(logTAG, "< < < < < < < < < < < < ");
             }
             break;
@@ -445,7 +444,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             newDir = 2;
             if (oldDir != newDir) {
                speakText("go middle");
-               oldDir = newDir;
                Log.i(logTAG, "- - - - - - - - - - - - ");
             }
             break;
@@ -454,7 +452,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             newDir = 3;
             if (oldDir != newDir) {
                speakText("go right");
-               oldDir = newDir;
                Log.i(logTAG, "> > > > > > > > > > > > ");
             }
             break;
@@ -464,13 +461,13 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             newDir = 2;
             if (oldDir != newDir) {
                speakText("searching");
-               oldDir = newDir;
                Log.i(logTAG, "- - - L O O K - - ");
             }
             break;
       }
       if (oldDir != newDir) {
          sendToCar(CMD_MOVE, plT, plR, plV, plS, plA, "FIND");
+         oldDir = newDir;
       }
    }
 
