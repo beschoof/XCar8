@@ -1,5 +1,5 @@
 package com.example.xcar8;
-// Stand 30.7.24
+// Stand 30.7.24 B
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -59,6 +59,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
    // MQTT
    private WroxAccessory mAccessory;
    private UsbConnection12 connection;
+
    final String MQTT_TOPIC = "AN";
    String subscription;
    private int subscriptionId = 0;
@@ -176,7 +177,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       byte plS = 0;  // weg
       byte plA = 0;  // Winkel
       String cmd;
-
 
       MissionStep m = myMission.getNextStep();
       if (m == null) {
@@ -310,14 +310,16 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                      break;
                   case 12:
                      tools.logge(logTAG, "--> NO_SINAL -> STOP");
-                     break;
+                     doStop();
+                     return;
                   case 16:
                      tools.logge(logTAG, "--> CANCEL");
                      doStop();
-                     break;
+                     return;
                   default:
                      tools.logge(logTAG, "--> ??? invalid RC " + payload[1]);
                      doStop();
+                     return;
                }
 
                int rcVal = 0;
