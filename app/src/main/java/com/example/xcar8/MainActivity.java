@@ -1,5 +1,5 @@
 package com.example.xcar8;
-// Stand 30.7.24 B
+// Stand 1.8.24 B
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -87,7 +87,13 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
    final static byte CMD_INIT = 1;
    final static byte CMD_MOVE = 2;
    final static byte CMD_WAIT = 3;
+   final static byte CMD_FIND = 4;
    final static byte CMD_STOP = 9;
+   final static byte RC_OK    = 1;
+   final static byte RC_DONE  = 2;
+   final static byte RC_ERR   = 8;
+   final static byte RC_CANCEL = 16;
+
    final static byte b0 = 0;
    static int oldDir = 0;
 
@@ -299,20 +305,20 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
                   tools.logge(logTAG, "onReceive plCMD diff, MyID: " + plCmdId);
                }
                switch (payload[1]) {
-                  case 1:
+                  case RC_OK:  // cmdMove/Wait: Kommando komplett ausgeführt (Zeit/Weg...) --> Next Step
                      tools.logge(logTAG, "--> OK");
                      break;
-                  case 4:
-                     tools.logge(logTAG, "--> TIMEOUT");
-                     break;
-                  case 8:
+                  case RC_DONE:  // cmdFind: Kommando unten angekommen --> nix zu tun
+                     tools.logge(logTAG, "--> DONE");
+                     return;
+                  case RC_ERR:
                      tools.logge(logTAG, "--> ERROR");
                      break;
                   case 12:
                      tools.logge(logTAG, "--> NO_SINAL -> STOP");
                      doStop();
                      return;
-                  case 16:
+                  case RC_CANCEL:
                      tools.logge(logTAG, "--> CANCEL");
                      doStop();
                      return;
@@ -425,7 +431,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       }
    };
 
-   void moveDir(int dir) {
+   void findDir(int dir) {
       byte plT = 0;  // time
       byte plV = 3;  // geschw
       byte plR = 0;  // radius, 8:: geradeaus
@@ -468,7 +474,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             break;
       }
       if (oldDir != newDir) {
-         sendToCar(CMD_MOVE, plT, plR, plV, plS, plA, "FIND");
+         sendToCar(CMD_FIND, plT, plR, plV, plS, plA, "FIND");
          oldDir = newDir;
       }
    }

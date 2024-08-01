@@ -1,7 +1,6 @@
 package com.example.xcar8;
 // stnd7.4.20, laptop
 
-import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -105,16 +104,16 @@ class PicAnalyzeProcess {
          int c = r.x + r.width / 2;
          if (c > src.cols() * 2 / 3) { // Move right
             direction = 3;
-            mainActivity.moveDir(MainActivity.ACTION_RIGHT);
+            mainActivity.findDir(MainActivity.ACTION_RIGHT);
          } else if (c > src.cols() / 3) { // Move center
             direction = 2;
-            mainActivity.moveDir(MainActivity.ACTION_MIDDLE);
+            mainActivity.findDir(MainActivity.ACTION_MIDDLE);
          } else { // left
             direction = 1;
-            mainActivity.moveDir(MainActivity.ACTION_LEFT);
+            mainActivity.findDir(MainActivity.ACTION_LEFT);
          }
       } else {
-         mainActivity.moveDir(MainActivity.ACTION_STOP);
+         mainActivity.findDir(MainActivity.ACTION_STOP);
       }
       Log.i(TAG, " quit run()");
       return returnPic;

@@ -1,5 +1,12 @@
+#include <AndroidAccessory.h>
+#include <ch9.h>
+#include <Max3421e.h>
+#include <Max3421e_constants.h>
+#include <P2PMQTT.h>
+#include <UsbHost.h>
+
 /*
-30.7.24
+1.8.24
 SKYRC: ESC-5V an Vin
 !! Bilbliothek unter C:\dev\dev\arduino\libraries\MQTT_Lib 
 !! Please do not use Digital pin 7 as input or output because is used in the comunication with MAX3421E)
@@ -23,7 +30,8 @@ byte carType = 0;
 #define mLow  1900
 
 // return codes -> android
-#define rcOk       1
+#define rcOk       1  // cmdMove: Ziel des Steps errecht
+#define rcDone     2  // cmdFind: Kommando genommen
 #define rcError    8
 #define rcCancel  16  // mission cancel
 
@@ -31,6 +39,7 @@ byte carType = 0;
 #define cmdInit  1
 #define cmdMove  2
 #define cmdWait  3
+#define cmdFind  4
 #define cmdStop  9
 
 // MQTT
@@ -202,7 +211,16 @@ void loop() {
           }
 
           logge("doMOVE " + String(duration) + "," + String(rotMax) + "," + String(dipsMax));
-            doMove();          
+          doMove();
+          break;
+
+        case cmdFind:
+          if (carType == 0) {
+            cancel("#### cmdFind vor cmdInit --> ERROR", 2);
+          }
+          logge("doFind ");
+          doMove();
+          doPublish0(rcDone, 0);
           break;
 
         case cmdWait:
@@ -226,25 +244,26 @@ void loop() {
     break;
   } // switch mqtt.type
 
-loopEnd:
-    if (iAmActive && ( (plT == 0) || (millis() - tStart > duration) )) {  // Zeit abgelaufen ?
-      String s = (doCountRots) ? String(rots) : ";";
-      logge("CMD done in time", rots);
-      doPublish0(rcOk, 0);
-      // sende OK ans Android, und warte auf neues Kommando.
-    }
+loopEnd:  // Abfrage, ob Ziel des Steps erreicht (auch, wenn kein neues CMD von oben kommt)
+    if (plCmd == cmdMove || plCmd == cmdWait) {
+        if (iAmActive &&  (plT > 0) && (millis() - tStart > duration) ) {  // Zeit abgelaufen ?
+          String s = (doCountRots) ? String(rots) : ";";
+          logge("CMD done in time", rots);
+          doPublish0(rcOk, 0);        // sende OK ans Android, und warte auf neues Kommando.
+        }
 
-    if (iAmActive && doCountRots && (rotMax < rots) ) {   // test auf Weglaenge 
-      logge("CMD done in way", rots);
-      doPublish0(rcOk, 0);
-    }
+        if (iAmActive && doCountRots && (rotMax < rots) ) {   // test auf Weglaenge
+          logge("CMD done in way", rots);
+          doPublish0(rcOk, 0);
+        }
 
-    if (iAmActive && doCountGyro) {  // Winkel erreicht?
-      dips += getGyroDips();
-      if (abs(dips) >= dipsMax) {
-        logge("CMD done in Angle",dips);
-        doPublish0(rcOk, 0);
-      }
+        if (iAmActive && doCountGyro) {  // Winkel erreicht?
+          dips += getGyroDips();
+          if (abs(dips) >= dipsMax) {
+            logge("CMD done in Angle",dips);
+            doPublish0(rcOk, 0);
+          }
+        }
     }
 
 } // end loop
