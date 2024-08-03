@@ -96,6 +96,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
    final static byte b0 = 0;
    static int oldDir = 0;
+   final static int FIND_TIME_OVER  = 1;
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
@@ -417,7 +418,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
          t1 = SystemClock.uptimeMillis();
          if (t1 - t0 > duration) {
             speakText("trace mode time over");
-            tHandler.obtainMessage(1).sendToTarget();
+            tHandler.obtainMessage(FIND_TIME_OVER).sendToTarget();
          }
       }
       return cameraPic;
@@ -426,7 +427,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
    private  Handler tHandler = new Handler(){
       @Override
       public void handleMessage(Message msg) {
-         if (msg.what == 1) {
+         if (msg.what == FIND_TIME_OVER) {
             stopOcvMode();
          }
       }
