@@ -22,23 +22,22 @@ class PicAnalyzeProcess {
    private static final String TAG = "### PicAnalyzeProcess: ";
 
    private ImageView imgView;
-   private TextView mTtextView;
-   private Mat hsv = new Mat();
-   private Mat dst = new Mat();
-   private Mat intermediate = new Mat();
-   private Mat temp2 = new Mat();
-   private Mat hierarchy = new Mat();
-   private ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+   private final Mat hsv = new Mat();
+   private final Mat dst = new Mat();
+   private final Mat intermediate = new Mat();
+   private final Mat temp2 = new Mat();
+   private final Mat hierarchy = new Mat();
+   private final ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
    private int direction = 0;
-   private int c0, c1;
+   private final int c0;
+   private final int c1;
    MainActivity mainActivity;
 
    PicAnalyzeProcess(CameraBridgeViewBase anOpenCvCameraView, MainActivity mainActivity,
-                     TextView textView, int x, int y) {
+                     int x, int y) {
       Log.i(TAG, "PicAnalyzeProcess instantiated");
       this.mainActivity = mainActivity;
 
-      this.mTtextView = textView;
       c0 = x;  // FarbBereich
       c1 = y;
    }

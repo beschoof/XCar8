@@ -1,5 +1,5 @@
 package com.example.xcar8;
-// Stand 1.8.24 B
+// Stand 3.8.24
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -366,13 +366,14 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       textView = findViewById(R.id.textView);
       if (!isAVD) mOpenCvCameraView.setCameraIndex(CameraBridgeViewBase.CAMERA_ID_FRONT);  // Handy
       mOpenCvCameraView.enableView();
-      picAnalyzeProcess = new PicAnalyzeProcess(mOpenCvCameraView, this, textView, x, y);
+      picAnalyzeProcess = new PicAnalyzeProcess(mOpenCvCameraView, this, x, y);
    }
 
    private void stopOcvMode() {
       ocvMode = false;
       mOpenCvCameraView.setVisibility(SurfaceView.INVISIBLE);
       mOpenCvCameraView.disableView();
+      myLog.refreshDrawableState();
       setContentView(R.layout.activity_menu);
       byte[] payload = {plCmdId, 1, 0};  // id, ok, 0
       Intent publishIntent = new Intent();
