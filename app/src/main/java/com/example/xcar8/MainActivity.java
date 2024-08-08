@@ -40,7 +40,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class MainActivity extends Activity implements CvCameraViewListener2 {
-   private static final String logTAG = "### XCar8: ";
+   private static final String logTAG = "XCar8";
    static TextToSpeech textToSpeech;
    Tools tools;
 

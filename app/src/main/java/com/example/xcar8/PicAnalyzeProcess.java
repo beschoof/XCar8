@@ -19,7 +19,7 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 
 class PicAnalyzeProcess {
-   private static final String TAG = "### PicAnalyzeProcess: ";
+   private static final String TAG = "PicAnalyzeProcess";
 
    private ImageView imgView;
    private final Mat hsv = new Mat();
