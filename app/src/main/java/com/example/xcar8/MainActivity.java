@@ -1,5 +1,5 @@
 package com.example.xcar8;
-// Stand 3.8.24
+// Stand 9.8.24
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -442,7 +442,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
       int newDir = 0; // 1..3
       switch (dir) {
          case ACTION_LEFT:
-            plR = 10;  // radius
+            plR = 5;  // radius, analog -3 in mission.txt
             newDir = 1;
             if (oldDir != newDir) {
                speakText("go left");
@@ -450,7 +450,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             }
             break;
          case ACTION_MIDDLE:
-            plR = 8;
+            plR = 8;  // radius, analog 0 in mission.txt
             newDir = 2;
             if (oldDir != newDir) {
                speakText("go middle");
@@ -458,7 +458,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             }
             break;
          case ACTION_RIGHT:
-            plR = 6;  // radius
+            plR = 11;  // radius, analog 3 in mission.txt
             newDir = 3;
             if (oldDir != newDir) {
                speakText("go right");
